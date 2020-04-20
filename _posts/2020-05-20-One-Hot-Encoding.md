@@ -4,7 +4,7 @@ title: "One Hot Encoding"
 categories:
   - classification
 tags:
-  - Blog, classification
+  - Blog, classification, categorical, 범주형, NLP
 use_math: true
 comments: true
 ---
@@ -33,7 +33,7 @@ Metric이 Log loss라 모델이 도출하는 건 각 클래스의 확률이어�
 ## Handling categorical features
 ### One Hot Encoding
 
-Categorical feature(특히 문자형)는 보통 One-Hot-Encoding을 하는데 이것도 여러 방식이 있다.
+범주형 데이터(특히 문자형)는 보통 One-Hot-Encoding을 하는데 이것도 여러 방식이 있다.
 
 ```python
 # 1) pandas
