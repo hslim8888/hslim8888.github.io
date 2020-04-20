@@ -1,10 +1,10 @@
 ---
 layout: post
-title: "Categorial feature 처리" 
+title: "One Hot Encoding" 
 categories:
-  - Data
+  - classification
 tags:
-  - Blog
+  - Blog, classification
 use_math: true
 comments: true
 ---
