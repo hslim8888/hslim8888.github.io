@@ -90,6 +90,14 @@ analytics:
     anonymize_ip         : # true, false (default)
 
 
+# Math equation
+markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
+
+
 # Site Author
 author:
   name             : "hslim8888"
