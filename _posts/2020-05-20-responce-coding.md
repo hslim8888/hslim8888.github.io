@@ -37,7 +37,7 @@ class가 0,1,2 세 개이고 train의 카테고리가 [A, B, C, D, E]가 있을 
 
 [Chain Rule](https://en.wikipedia.org/wiki/Chain_rule_(probability)) 에선 값이 무조건 0이 되어버린다.
 
-이런 문제를 간단히 해소하는 것이 바로 [Laplace Smoothing(라플라스 평활)](https://en.wikipedia.org/wiki/Additive_smoothing)이다. 
+이런 문제를 간단히 해소하는 것이 바로 Laplace Smoothing(라플라스 평활)이다. [위키](https://en.wikipedia.org/wiki/Additive_smoothing)
 $$p_i = x_i/N$$ 에서 $$p_i = (x_i+alpha)/(N+alpha*K)$$ 로 바꿔준 건데, K는 class의 개수이다.
 
 위의 예에서 N=100, alpha=1이라 했을 때, 
