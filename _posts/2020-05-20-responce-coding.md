@@ -29,9 +29,9 @@ category에 따른 class의 확률을 구하는 것이라, Category의 개수만
 
 머신러닝에 조건부 확률을 쓸 때의 문제는 train, test set을 나눈다는 점이다.
 
-class가 0,1,2 세 개이고 train의 카테고리가 [A, B, C, D, E]가 있을 때, P(class=1 | category=A)를 구할 수 있다.
+class가 0,1,2 세 개이고 train의 카테고리가 (A, B, C, D, E)가 있을 때, P(class=1 | category=A)를 구할 수 있다.
 
-하지만 Test set에선 카테고리가 [A,B,C,D,E,F]로 train set에 없던 F가 더 있을 수 있으며, 이 경우 훈련 모델에선 P(F)=0라 위 수식에선 분모가 0이 되거나 
+하지만 Test set에선 카테고리가 (A,B,C,D,E,F)로 train set에 없던 F가 더 있을 수 있으며, 이 경우 훈련 모델에선 P(F)=0라 위 수식에선 분모가 0이 되거나 
 
 ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/1386ec6778f1816c3fa6e9de68f89cee2e938066)
 
