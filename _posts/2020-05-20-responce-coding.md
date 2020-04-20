@@ -29,20 +29,21 @@ category에 따른 class의 확률을 구하는 것이라, Category의 개수만
 
 머신러닝에 조건부 확률을 쓸 때의 문제는 train, test set을 나눈다는 점이다.
 
-class가 0,1,2 세 개이고 train의 카테고리가 (A, B, C, D, E)가 있을 때, P(class=1 | category=A)를 구할 수 있다.
+class가 0,1,2 세 개이고 train의 카테고리가 A, B, C, D, E가 있을 때, P(class=1 | category=A)를 구할 수 있다.
 
-하지만 Test set에선 카테고리가 (A,B,C,D,E,F)로 train set에 없던 F가 더 있을 수 있으며, 이 경우 훈련 모델에선 P(F)=0라 위 수식에선 분모가 0이 되거나 
+하지만 Test set에선 카테고리가 A,B,C,D,E,F로 train set에 없던 F가 더 있을 수 있으며, 이 경우 훈련 모델에선 P(F)=0라 위 수식에선 분모가 0이 되거나 
 
 ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/1386ec6778f1816c3fa6e9de68f89cee2e938066)
 
 [Chain Rule](https://en.wikipedia.org/wiki/Chain_rule_(probability)) 에선 값이 무조건 0이 되어버린다.
 
 이런 문제를 간단히 해소하는 것이 바로 Laplace Smoothing(라플라스 평활)이다. [위키](https://en.wikipedia.org/wiki/Additive_smoothing)
+
 $$p_i = x_i/N$$ 에서 $$p_i = (x_i+alpha)/(N+alpha*K)$$ 로 바꿔준 건데, K는 class의 개수이다.
 
 위의 예에서 N=100, alpha=1이라 했을 때, 
 
-원래라면 $$P(F|1) = 0 / 100$$ 이지만, 라플라스 평활을 이용하면 $$P(F|1)=(0+1)/(1000+3)$$ 으로 값이 0이 아니게 된다.
+원래라면 $$P(F|1)=0/100$$ 이지만, 라플라스 평활을 이용하면 $$P(F|1)=(0+1)/(1000+3)$$ 으로 값이 0이 아니게 된다.
 
 따라서 머신러닝 문제에서 조건부 확률을 이용할 땐 무조건 Laplace Smoothing을 고려해야한다고 생각하면 될 듯.
 
