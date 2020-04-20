@@ -50,7 +50,7 @@ enc = CountVectorizer()
 enc.fit_transform(df['Gene'])
 ```
 
-Pandas를 이용한 1번이 가장 편하긴한데, 아래와 같이 DataFrame을 생성해 메모리를 소모가 있다.
+Pandas를 이용한 1번이 가장 편하긴한데, 아래와 같이 DataFrame을 생성해 메모리 소모가 있다.
 ```python
 	ABL1	ACVR1	AGO2	AKT1	AKT2	AKT3	ALK	APC	AR	ARAF	...	TSC1	TSC2	U2AF1	VEGFA	VHL	WHSC1	WHSC1L1	XPO1	XRCC2	YAP1
 1019	0	0	0	0	0	0	0	0	0	0	...	0	1	0	0	0	0	0	0	0	0
