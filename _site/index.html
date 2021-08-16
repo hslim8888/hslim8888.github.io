@@ -1,29 +1,30 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.19.1 by Michael Rose
-  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Minimal Mistakes Jekyll Theme 4.24.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
 -->
-<html lang="ko" class="no-js">
+<html lang="en" class="no-js">
   <head>
     <meta charset="utf-8">
 
-<!-- begin _includes/seo.html --><title>Date with Data</title>
-<meta name="description" content="데이터 사이언스 ">
+<!-- begin _includes/seo.html --><title>Site Title</title>
+<meta name="description" content="An amazing website.">
 
 
-  <meta name="author" content="hslim8888">
+  <meta name="author" content="Your Name">
+  
 
 
 <meta property="og:type" content="website">
-<meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="Date with Data">
-<meta property="og:title" content="Date with Data">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Site Title">
+<meta property="og:title" content="Site Title">
 <meta property="og:url" content="http://localhost:4000/blog/">
 
 
-  <meta property="og:description" content="데이터 사이언스 ">
+  <meta property="og:description" content="An amazing website.">
 
 
 
@@ -50,7 +51,7 @@
     "@context": "https://schema.org",
     
       "@type": "Person",
-      "name": "hslim",
+      "name": "Your Name",
       "url": "http://localhost:4000/blog/"
     
   }
@@ -61,10 +62,13 @@
 
 
 
+
 <!-- end _includes/seo.html -->
 
 
-<link href="/blog/feed.xml" type="application/atom+xml" rel="alternate" title="Date with Data Feed">
+
+  <link href="/blog/feed.xml" type="application/atom+xml" rel="alternate" title="Site Title Feed">
+
 
 <!-- https://t.co/dKP3o1e -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -75,25 +79,8 @@
 
 <!-- For all browsers -->
 <link rel="stylesheet" href="/blog/assets/css/main.css">
-
-<!--[if IE]>
-  <style>
-    /* old IE unsupported flexbox fixes */
-    .greedy-nav .site-title {
-      padding-right: 3em;
-    }
-    .greedy-nav button {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 100%;
-    }
-  </style>
-<![endif]-->
-
-
-
-
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css"></noscript>
 
 
 
@@ -107,7 +94,6 @@
 
   <body class="layout--home">
     <nav class="skip-links">
-  <h2 class="screen-reader-text">Skip links</h2>
   <ul>
     <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
     <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
@@ -127,7 +113,7 @@
       <nav id="site-nav" class="greedy-nav">
         
         <a class="site-title" href="/blog/">
-          Date with Data
+          Site Title
           
         </a>
         <ul class="visible-links"><li class="masthead__menu-item">
@@ -135,7 +121,7 @@
             </li></ul>
         
         <button class="greedy-nav__toggle hidden" type="button">
-          <span class="visually-hidden">토글 메뉴</span>
+          <span class="visually-hidden">Toggle menu</span>
           <div class="navicon"></div>
         </button>
         <ul class="hidden-links hidden"></ul>
@@ -156,36 +142,34 @@
   
 
 
-<div itemscope itemtype="https://schema.org/Person">
+<div itemscope itemtype="https://schema.org/Person" class="h-card">
 
   
 
   <div class="author__content">
+    <h3 class="author__name p-name" itemprop="name">
+      <a class="u-url" rel="me" href="http://localhost:4000/blog/" itemprop="url">Your Name</a>
+    </h3>
     
-      <h3 class="author__name" itemprop="name">hslim8888</h3>
-    
-    
-      <div class="author__bio" itemprop="description">
-        <p>농식품업에 오랫동안 종사하다 데이터 사이언스 분야로의 전직을 위해 열공 중</p>
+      <div class="author__bio p-note" itemprop="description">
+        <p>I am an <strong>amazing</strong> person.</p>
 
       </div>
     
   </div>
 
   <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">팔로우</button>
+    <button class="btn btn--inverse">Follow</button>
     <ul class="author__urls social-icons">
       
         <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
-          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Somewhere</span>
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name" class="p-locality">Somewhere</span>
         </li>
       
 
       
         
           
-            <li><a href="mailto:hslim8888@gmail.com" rel="nofollow noopener noreferrer"><i class="fa s fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
-          
         
           
         
@@ -201,13 +185,6 @@
 
       
 
-      
-        <li>
-          <a href="mailto:hslim8888@gmail.com">
-            <meta itemprop="email" content="hslim8888@gmail.com" />
-            <i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">이메일</span>
-          </a>
-        </li>
       
 
       
@@ -256,7 +233,7 @@
 
       <!--
   <li>
-    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer me">
       <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
     </a>
   </li>
@@ -264,7 +241,6 @@
     </ul>
   </div>
 </div>
-
   
   </div>
 
@@ -276,34 +252,47 @@
     
     
 
-<h3 class="archive__subtitle">최근 포스트</h3>
+<h3 class="archive__subtitle">Recent posts</h3>
 
 
 
 
+<div class="entries-list">
   
+    
 
 
 
 <div class="list__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-    <h2 class="archive__item-title" itemprop="headline">
+    <h2 class="archive__item-title no_toc" itemprop="headline">
       
         <a href="/blog/classification/responce-coding/" rel="permalink">Response Coding
 </a>
       
     </h2>
     
-      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
 
-
-
-
-  1 분 소요
-
-</p>
+  <p class="page__meta">
     
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
     <p class="archive__item-excerpt" itemprop="description">범주형 데이터
 Response Coding
 One-hot-encoding에 이어서
@@ -312,30 +301,41 @@ One-hot-encoding에 이어서
   </article>
 </div>
 
-
   
+    
 
 
 
 <div class="list__item">
   <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
     
-    <h2 class="archive__item-title" itemprop="headline">
+    <h2 class="archive__item-title no_toc" itemprop="headline">
       
         <a href="/blog/classification/One-Hot-Encoding/" rel="permalink">One Hot Encoding
 </a>
       
     </h2>
     
-      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
 
-
-
-
-  1 분 소요
-
-</p>
+  <p class="page__meta">
     
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
     <p class="archive__item-excerpt" itemprop="description">Multi Classification
 변이 유전자 탐색 및 분류
 
@@ -343,7 +343,8 @@ One-hot-encoding에 이어서
   </article>
 </div>
 
-
+  
+</div>
 
 
 
@@ -362,7 +363,7 @@ One-hot-encoding에 이어서
         <div class="page__footer-follow">
   <ul class="social-icons">
     
-      <li><strong>팔로우:</strong></li>
+      <li><strong>Follow:</strong></li>
     
 
     
@@ -381,18 +382,19 @@ One-hot-encoding에 이어서
       
     
 
-    <li><a href="/blog/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> 피드</a></li>
+    
+      <li><a href="/blog/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2021 hslim. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2021 Your Name. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
 
     
   <script src="/blog/assets/js/main.min.js"></script>
-  <script src="https://kit.fontawesome.com/4eee35f757.js"></script>
 
 
 
