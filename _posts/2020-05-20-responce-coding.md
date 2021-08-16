@@ -13,10 +13,12 @@ comments: true
 ## Response Coding
 [One-hot-encoding에 이어서](https://hslim8888.github.io/classification/One-Hot-Encoding/)
 
-Response Coding은 조건부 확률을 일컫는 것이나 다름없다.[참조](https://medium.com/@thewingedwolf.winterfell/response-coding-for-categorical-data-7bb8916c6dc1)
+Response Coding은 조건부 확률을 일컫는 것이나 다름없다. [참조](https://medium.com/@thewingedwolf.winterfell/response-coding-for-categorical-data-7bb8916c6dc1)
+
+
 수식은 다음과 같은데
 
-$$P(class=X | category=A) = P(category=A ∩ class=X) / P(category=A)$$
+$P(class=X \vert category=A) = P(category=A \cap class=X) / P(category=A)$
 
 category에 따른 class의 확률을 구하는 것이라, Category의 개수만큼 차원(feature)이 생기는 원핫인코딩과는 달리 Response Coding은 ***class의 개수만큼*** 차원(feature)이 늘어난다.
 
@@ -29,7 +31,7 @@ category에 따른 class의 확률을 구하는 것이라, Category의 개수만
 
 머신러닝에 조건부 확률을 쓸 때의 문제는 train, test set을 나눈다는 점이다.
 
-class가 0,1,2 세 개이고 train의 카테고리가 A, B, C, D, E가 있을 때, P(class=1 | category=A)를 구할 수 있다.
+class가 0,1,2 세 개이고 train의 카테고리가 A, B, C, D, E가 있을 때, $P(class=1 \vert category=A)$를 구할 수 있다.
 
 하지만 Test set에선 카테고리가 A,B,C,D,E,F로 train set에 없던 F가 더 있을 수 있으며, 이 경우 훈련 모델에선 P(F)=0라 위 수식에선 분모가 0이 되거나 
 
@@ -39,13 +41,12 @@ class가 0,1,2 세 개이고 train의 카테고리가 A, B, C, D, E가 있을 �
 
 이런 문제를 간단히 해소하는 것이 바로 Laplace Smoothing(라플라스 평활)이다. [위키](https://en.wikipedia.org/wiki/Additive_smoothing)
 
-$$p_i = x_i/N$$ 에서 $$p_i = (x_i+alpha)/(N+alpha*K)$$ 로 바꿔준 건데, K는 class의 개수이다.
+$p_i = x_i/N$ 에서  
+$p_i = (x_i+alpha)/(N+alpha*K)$ 로 바꿔준 건데, K는 class의 개수이다.
 
 위의 예에서 N=100, alpha=1이라 했을 때, 
 
-원래라면 $$P(F|1)=0/100$$ 이지만, 라플라스 평활을 이용하면 $$P(F|1)=(0+1)/(1000+3)$$ 으로 값이 0이 아니게 된다.
+원래라면 $P(F \vert 1)=0/100$ 이지만, 
+라플라스 평활을 이용하면 $P(F \vert 1)=(0+1)/(1000+3)$ 으로 값이 0이 아니게 된다.
 
 따라서 머신러닝 문제에서 조건부 확률을 이용할 땐 무조건 Laplace Smoothing을 고려해야한다고 생각하면 될 듯.
-
-
-

@@ -6,7 +6,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Response Coding",
-        "excerpt":"범주형 데이터 Response Coding One-hot-encoding에 이어서 Response Coding은 조건부 확률을 일컫는 것이나 다름없다.참조 수식은 다음과 같은데 \\[P(class=X | category=A) = P(category=A ∩ class=X) / P(category=A)\\] category에 따른 class의 확률을 구하는 것이라, Category의 개수만큼 차원(feature)이 생기는 원핫인코딩과는 달리 Response Coding은 class의 개수만큼 차원(feature)이 늘어난다. 또한 클래스당 확률을 고려하는 거라 모델의 측정...","categories": ["classification"],
+        "excerpt":"범주형 데이터 Response Coding One-hot-encoding에 이어서 Response Coding은 조건부 확률을 일컫는 것이나 다름없다. 참조 수식은 다음과 같은데 $P(class=X \\vert category=A) = P(category=A \\cap class=X) / P(category=A)$ category에 따른 class의 확률을 구하는 것이라, Category의 개수만큼 차원(feature)이 생기는 원핫인코딩과는 달리 Response Coding은 class의 개수만큼 차원(feature)이 늘어난다. 또한 클래스당 확률을 고려하는 거라 모델의...","categories": ["classification"],
         "tags": ["Blog"],
         "url": "/classification/responce-coding/",
         "teaser": null

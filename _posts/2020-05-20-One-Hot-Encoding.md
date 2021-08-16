@@ -24,7 +24,7 @@ comments: true
 
 또 한 가지 주의점은 Evaluation Metrics가 [Log Loss](http://wiki.fast.ai/index.php/Log_Loss)란 것. 이진 분류인 경우 수직은 다음과 같은데
 
-$$-(ylog(p)+(1-y)log(1-p))$$
+$-(y\log(p)+(1-y)\log(1-p))$
 
 class 뿐 아니라 확률까지 고려하는 방식이다. 클래스를 정확히 분류했더라도, 다른(틀린) 클래스에도 확률을 부여했다면(그래서 정답 확률이 낮아졌다면) 거기에 패널티를 부여하는 방식으로 작동한다. 범위는 0~무한대이고 당연히 낮을수록 좋은데, good bad 기준이 명확하지 않다. 따라서 랜덤모델(worst case)을 만들고 거기에서 시작하는 게 좋은 방법.
 
