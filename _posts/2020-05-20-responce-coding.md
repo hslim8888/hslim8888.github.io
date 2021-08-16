@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: posts
 title: "Response Coding" 
 categories:
   - classification
