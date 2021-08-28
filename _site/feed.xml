@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-28T22:01:01+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/datascience/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/datascience/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-28T22:14:10+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/datascience/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/datascience/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
 
 &lt;p&gt;데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다.&lt;/p&gt;
 
@@ -413,22 +413,84 @@
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;request 를 MP로
-  |request MP	|t2|	t4|	t6|
-  |—|—|—|—|
-  |1	|29.4465	|29.3292	|30.1410|
-  |2	|21.7639	|21.4872	|22.0807|
-  |5	|19.3698	|19.0741	|19.7106|
-  |10	|19.3945	|18.5791	|18.6749|&lt;/p&gt;
+    &lt;p&gt;request 를 MP로&lt;/p&gt;
+
+    &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;request MP&lt;/th&gt;
+          &lt;th&gt;t2&lt;/th&gt;
+          &lt;th&gt;t4&lt;/th&gt;
+          &lt;th&gt;t6&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;29.4465&lt;/td&gt;
+          &lt;td&gt;29.3292&lt;/td&gt;
+          &lt;td&gt;30.1410&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td&gt;21.7639&lt;/td&gt;
+          &lt;td&gt;21.4872&lt;/td&gt;
+          &lt;td&gt;22.0807&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;5&lt;/td&gt;
+          &lt;td&gt;19.3698&lt;/td&gt;
+          &lt;td&gt;19.0741&lt;/td&gt;
+          &lt;td&gt;19.7106&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;10&lt;/td&gt;
+          &lt;td&gt;19.3945&lt;/td&gt;
+          &lt;td&gt;18.5791&lt;/td&gt;
+          &lt;td&gt;18.6749&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;request를 MT로
-  |request MT|	t2|	t4|	t6|
-  |—|—|—|—|
-  |1	|31.1286	|29.6854	|29.8881|
-  |2	|22.6746	|21.6944	|21.7618|
-  |5	|19.2557	|18.7895	|19.8223|
-  |10	|19.1327	|18.5023	|18.0640|&lt;/p&gt;
+    &lt;p&gt;request를 MT로&lt;/p&gt;
+
+    &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;request MT&lt;/th&gt;
+          &lt;th&gt;t2&lt;/th&gt;
+          &lt;th&gt;t4&lt;/th&gt;
+          &lt;th&gt;t6&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;31.1286&lt;/td&gt;
+          &lt;td&gt;29.6854&lt;/td&gt;
+          &lt;td&gt;29.8881&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td&gt;22.6746&lt;/td&gt;
+          &lt;td&gt;21.6944&lt;/td&gt;
+          &lt;td&gt;21.7618&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;5&lt;/td&gt;
+          &lt;td&gt;19.2557&lt;/td&gt;
+          &lt;td&gt;18.7895&lt;/td&gt;
+          &lt;td&gt;19.8223&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;10&lt;/td&gt;
+          &lt;td&gt;19.1327&lt;/td&gt;
+          &lt;td&gt;18.5023&lt;/td&gt;
+          &lt;td&gt;18.0640&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
