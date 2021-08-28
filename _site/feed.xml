@@ -1,31 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-29T00:08:16+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/data-science/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/data-science/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
-
-&lt;p&gt;데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다.&lt;/p&gt;
-
-&lt;p&gt;스스로 생각하기에 꽤나 특이한 경로를 거치는 중인데 덕분에 데이터 엔지니어링 뿐 아니라 그 전엔 전혀 알지 못했던 웹 개발까지 얕게나마 두루두루 살펴 볼 수 있는 기회를 갖게 되었다. 또한 대량의 데이터를 전처리해야했던터라 프로세스 효율성을 늘 염두에 두는 관점도(만 without 실력) 자연스레 기를 수 있었다.&lt;/p&gt;
-
-&lt;p&gt;그래서인지 flask 서버를 띄우고 api를 순차적으로 찔러서 모델의 결과값을 받는, 그래픽 카드를 늘리는 수직적 scale up만 고려할 수 밖에 없는, &lt;del&gt;회사의&lt;/del&gt; 일반적인 딥러닝 배포 방식에 의문이 들었다.&lt;/p&gt;
-
-&lt;p&gt;딥러닝 모델이 뒷단에서 느긋하게(?) 돌아가는 게 아니라, 사용자가 모델을 실시간으로 찔러 응답을 주고받는 B2C 방식도 어딘가엔 있을텐데, request를 단일로 주고 받는 건 너무나도 비효율적이지 않은가?&lt;/p&gt;
-
-&lt;p&gt;이런 문제의식을 몇몇 딥러닝 개발자에게 재기를 해봤지만, 대부분 ‘그게 뭐 어때서?’라는 반응이었다. 서비스단까지 고려하는 훈련이 안 되어 있기 때문은 아닐까? 아마 나 역시 데이터 분석이나 모델링만 했다면 그들과 같은 반응을 보였으리라 생각한다.&lt;/p&gt;
-
-&lt;p&gt;각설하고, 찾아보니 역시 방법은 있었다.&lt;/p&gt;
-
-&lt;p&gt;바로 production 레벨의 웹 서버 배포에 일반적으로(?) 쓰이는 flask + gunicorn + nginx  조합.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207543-47d45351-f27a-4b55-8ea9-78540a2ec6de.png&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;출처 : &lt;a href=&quot;https://villoro.com/post/nginx_gunicorn&quot;&gt;https://villoro.com/post/nginx_gunicorn&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;web server, wsgi에 대한 이론적인 부분은 이 &lt;a href=&quot;https://wikidocs.net/75556&quot;&gt;페이지&lt;/a&gt;에 간단하게 잘 설명되어 있다.&lt;/p&gt;
-
-&lt;p&gt;해당 시리즈에선 서버 환경 구성과 각 환경에 따른 응답 처리 속도 비교를 주로 다루려고 한다.&lt;/p&gt;
-
-&lt;p&gt;그 전에 결과부터 말하자면, &lt;u&gt;GPU 메모리 사용량&lt;/u&gt;의 큰 증가 없이&lt;/p&gt;
-
-&lt;p&gt;100개의 requests 처리시 약 &lt;u&gt;29초에서 18초대로 기존 대비 37% 이상&lt;/u&gt; 처리 속도를 줄일 수 있었다.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207541-62921987-e0a4-4cd4-8a03-32c14c8d1585.png&quot; /&gt;&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">웹 서버 구성을 바꿔 딥러닝 처리 속도를 개선해보자.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 2) 테스트 결과</title><link href="http://localhost:4000/data-science/test-results/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 2) 테스트 결과" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/test-results</id><content type="html" xml:base="http://localhost:4000/data-science/test-results/">&lt;h1 id=&quot;requests-테스트-조건&quot;&gt;requests 테스트 조건&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-29T00:23:55+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기 - 2) 테스트 결과</title><link href="http://localhost:4000/data-science/test-results/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 2) 테스트 결과" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/test-results</id><content type="html" xml:base="http://localhost:4000/data-science/test-results/">&lt;h1 id=&quot;requests-테스트-조건&quot;&gt;requests 테스트 조건&lt;/h1&gt;
 
 &lt;p&gt;테스트는 다음과 같은 조건으로 한다.  (MP==멀티 프로세스, MT==멀티 스레드)&lt;/p&gt;
 
@@ -599,7 +572,34 @@ GPU 메모리 사용량을 크게 늘리지 않으면서도 처리 속도를 기
 
 &lt;p&gt;서버 구성과 requests 방식을 multi threads로 변경시, 처리 속도가 기존에 비해 37~39% 가량 절감되었다. GPU 메모리 사용량과의 trade-off 를 감당할 수 있다면 40%까지도 줄일 수 있을 것으로 보이는데 그건 선택의 문제일 것 같다.&lt;/p&gt;
 
-&lt;p&gt;무엇보다 모델 개발자가&lt;del&gt;조직이&lt;/del&gt; 해당 구성의 필요성을 인지하는 게 가장 중요한 게 아닐까 싶다. 배포 이전에 테스트 시간도 줄일 수 있는데 마다할 이유가 있을까 싶지만, 변화를 싫어하는 게 또 사람인지라…&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">다양한 환경에서 딥러닝 모델 처리 속도를 테스트 해본다.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성</title><link href="http://localhost:4000/data-science/web-server-env-setting/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/web-server-env-setting</id><content type="html" xml:base="http://localhost:4000/data-science/web-server-env-setting/">&lt;p&gt;본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다.&lt;/p&gt;
+&lt;p&gt;무엇보다 모델 개발자가&lt;del&gt;조직이&lt;/del&gt; 해당 구성의 필요성을 인지하는 게 가장 중요한 게 아닐까 싶다. 배포 이전에 테스트 시간도 줄일 수 있는데 마다할 이유가 있을까 싶지만, 변화를 싫어하는 게 또 사람인지라…&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">다양한 환경에서 딥러닝 모델 처리 속도를 테스트 해본다.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/data-science/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/data-science/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/data-science/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
+
+&lt;p&gt;데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다.&lt;/p&gt;
+
+&lt;p&gt;스스로 생각하기에 꽤나 특이한 경로를 거치는 중인데 덕분에 데이터 엔지니어링 뿐 아니라 그 전엔 전혀 알지 못했던 웹 개발까지 얕게나마 두루두루 살펴 볼 수 있는 기회를 갖게 되었다. 또한 대량의 데이터를 전처리해야했던터라 프로세스 효율성을 늘 염두에 두는 관점도(만 without 실력) 자연스레 기를 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;그래서인지 flask 서버를 띄우고 api를 순차적으로 찔러서 모델의 결과값을 받는, 그래픽 카드를 늘리는 수직적 scale up만 고려할 수 밖에 없는, &lt;del&gt;회사의&lt;/del&gt; 일반적인 딥러닝 배포 방식에 의문이 들었다.&lt;/p&gt;
+
+&lt;p&gt;딥러닝 모델이 뒷단에서 느긋하게(?) 돌아가는 게 아니라, 사용자가 모델을 실시간으로 찔러 응답을 주고받는 B2C 방식도 어딘가엔 있을텐데, request를 단일로 주고 받는 건 너무나도 비효율적이지 않은가?&lt;/p&gt;
+
+&lt;p&gt;이런 문제의식을 몇몇 딥러닝 개발자에게 재기를 해봤지만, 대부분 ‘그게 뭐 어때서?’라는 반응이었다. 서비스단까지 고려하는 훈련이 안 되어 있기 때문은 아닐까? 아마 나 역시 데이터 분석이나 모델링만 했다면 그들과 같은 반응을 보였으리라 생각한다.&lt;/p&gt;
+
+&lt;p&gt;각설하고, 찾아보니 역시 방법은 있었다.&lt;/p&gt;
+
+&lt;p&gt;바로 production 레벨의 웹 서버 배포에 일반적으로(?) 쓰이는 flask + gunicorn + nginx  조합.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207543-47d45351-f27a-4b55-8ea9-78540a2ec6de.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;출처 : &lt;a href=&quot;https://villoro.com/post/nginx_gunicorn&quot;&gt;https://villoro.com/post/nginx_gunicorn&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;web server, wsgi에 대한 이론적인 부분은 이 &lt;a href=&quot;https://wikidocs.net/75556&quot;&gt;페이지&lt;/a&gt;에 간단하게 잘 설명되어 있다.&lt;/p&gt;
+
+&lt;p&gt;해당 시리즈에선 서버 환경 구성과 각 환경에 따른 응답 처리 속도 비교를 주로 다루려고 한다.&lt;/p&gt;
+
+&lt;p&gt;그 전에 결과부터 말하자면, &lt;u&gt;GPU 메모리 사용량&lt;/u&gt;의 큰 증가 없이&lt;/p&gt;
+
+&lt;p&gt;100개의 requests 처리시 약 &lt;u&gt;29초에서 18초대로 기존 대비 37% 이상&lt;/u&gt; 처리 속도를 줄일 수 있었다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207541-62921987-e0a4-4cd4-8a03-32c14c8d1585.png&quot; /&gt;&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">웹 서버 구성을 바꿔 딥러닝 처리 속도를 개선해보자.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성</title><link href="http://localhost:4000/data-science/web-server-env-setting/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/data-science/web-server-env-setting</id><content type="html" xml:base="http://localhost:4000/data-science/web-server-env-setting/">&lt;p&gt;본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다.&lt;/p&gt;
 
 &lt;h2 id=&quot;docker-이미지&quot;&gt;docker 이미지&lt;/h2&gt;
 
@@ -760,7 +760,7 @@ service nginx restart
 netstat -ntlp
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;다음 포스팅에선, 이렇게 띄운 flask&amp;amp;gunicorn + nginx 환경에서 싱글, 멀티 프로세스, 멀티 스레드 방식으로 request를 날려보며 처리 시간을 비교한 결과를 다루려고 한다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><category term="docker" /><category term="개발환경" /><summary type="html">도커로 flask, gunicorn, nginx 서버 띄우기</summary></entry><entry><title type="html">[python] 멀티 프로세스로 작업 속도 향상시키기</title><link href="http://localhost:4000/programming/multi-process-in-python/" rel="alternate" type="text/html" title="[python] 멀티 프로세스로 작업 속도 향상시키기" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/programming/multi-process-in-python</id><content type="html" xml:base="http://localhost:4000/programming/multi-process-in-python/">&lt;h1 id=&quot;병목-구간-찾기&quot;&gt;병목 구간 찾기&lt;/h1&gt;
+&lt;p&gt;다음 포스팅에선, 이렇게 띄운 flask&amp;amp;gunicorn + nginx 환경에서 싱글, 멀티 프로세스, 멀티 스레드 방식으로 request를 날려보며 처리 시간을 비교한 결과를 다루려고 한다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><category term="docker" /><category term="개발환경" /><summary type="html">도커로 flask, gunicorn, nginx 서버 띄우기</summary></entry><entry><title type="html">[python] 멀티 프로세스로 작업 속도 향상시키기</title><link href="http://localhost:4000/programming/multi-process-in-python/" rel="alternate" type="text/html" title="[python] 멀티 프로세스로 작업 속도 향상시키기" /><published>2021-08-26T00:00:00+09:00</published><updated>2021-08-26T00:00:00+09:00</updated><id>http://localhost:4000/programming/multi-process-in-python</id><content type="html" xml:base="http://localhost:4000/programming/multi-process-in-python/">&lt;h1 id=&quot;병목-구간-찾기&quot;&gt;병목 구간 찾기&lt;/h1&gt;
 
 &lt;p&gt;입사 후 첫 프로젝트가 데이터 전처리였다. 주어진 당면 과제가 가능한 모든 파트에 멀티 프로세스를 적용하고 전처리 시간을 최대한 줄이라, 그래야 뒷작업까지 하루 안에 끝낼 수 있다.. 라는 것.&lt;/p&gt;
 
