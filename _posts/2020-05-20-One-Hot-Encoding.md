@@ -2,7 +2,7 @@
 layout: posts
 title: "One Hot Encoding" 
 categories:
-  - classification
+  - datascience
 tags:
   - Blog, classification, categorical, 범주형, NLP
 use_math: true

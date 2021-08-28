@@ -2,9 +2,9 @@
 layout: posts
 title: "Response Coding" 
 categories:
-  - classification
+  - datascience
 tags:
-  - Blog
+  - classification
 use_math: true
 comments: true
 ---

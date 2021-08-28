@@ -1,4 +1,592 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-16T19:17:18+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">One Hot Encoding</title><link href="http://localhost:4000/classification/One-Hot-Encoding/" rel="alternate" type="text/html" title="One Hot Encoding" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T00:00:00+09:00</updated><id>http://localhost:4000/classification/One-Hot-Encoding</id><content type="html" xml:base="http://localhost:4000/classification/One-Hot-Encoding/">&lt;h1 id=&quot;multi-classification&quot;&gt;Multi Classification&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-28T18:46:20+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/datascience/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/datascience/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
+
+&lt;p&gt;데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다.&lt;/p&gt;
+
+&lt;p&gt;스스로 생각하기에 꽤나 특이한 경로를 거치는 중인데 덕분에 데이터 엔지니어링 뿐 아니라 그 전엔 전혀 알지 못했던 웹 개발까지 얕게나마 두루두루 살펴 볼 수 있는 기회를 갖게 되었다. 또한 대량의 데이터를 전처리해야했던터라 프로세스 효율성을 늘 염두에 두는 관점도(만 without 실력) 자연스레 기를 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;그래서인지 flask 서버를 띄우고 api를 순차적으로 찔러서 모델의 결과값을 받는, 그래픽 카드를 늘리는 수직적 scale up만 고려할 수 밖에 없는, &lt;del&gt;회사의&lt;/del&gt; 일반적인 딥러닝 배포 방식에 의문이 들었다.&lt;/p&gt;
+
+&lt;p&gt;딥러닝 모델이 뒷단에서 느긋하게(?) 돌아가는 게 아니라, 사용자가 모델을 실시간으로 찔러 응답을 주고받는 B2C 방식도 어딘가엔 있을텐데, request를 단일로 주고 받는 건 너무나도 비효율적이지 않은가?&lt;/p&gt;
+
+&lt;p&gt;이런 문제의식을 몇몇 딥러닝 개발자에게 재기를 해봤지만, 대부분 ‘그게 뭐 어때서?’라는 반응이었다. 서비스단까지 고려하는 훈련이 안 되어 있기 때문은 아닐까? 아마 나 역시 데이터 분석이나 모델링만 했다면 그들과 같은 반응을 보였으리라 생각한다.&lt;/p&gt;
+
+&lt;p&gt;각설하고, 찾아보니 역시 방법은 있었다.&lt;/p&gt;
+
+&lt;p&gt;바로 production 레벨의 웹 서버 배포에 일반적으로(?) 쓰이는 flask + gunicorn + nginx  조합.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207543-47d45351-f27a-4b55-8ea9-78540a2ec6de.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;출처 : &lt;a href=&quot;https://villoro.com/post/nginx_gunicorn&quot;&gt;https://villoro.com/post/nginx_gunicorn&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;web server, wsgi에 대한 이론적인 부분은 이 &lt;a href=&quot;https://wikidocs.net/75556&quot;&gt;페이지&lt;/a&gt;에 간단하게 잘 설명되어 있다.&lt;/p&gt;
+
+&lt;p&gt;해당 시리즈에선 서버 환경 구성과 각 환경에 따른 응답 처리 속도 비교를 주로 다루려고 한다.&lt;/p&gt;
+
+&lt;p&gt;그 전에 결과부터 말하자면, &lt;u&gt;GPU 메모리 사용량&lt;/u&gt;의 큰 증가 없이&lt;/p&gt;
+
+&lt;p&gt;100개의 requests 처리시 약 &lt;u&gt;29초에서 18초대로 기존 대비 37% 이상&lt;/u&gt; 처리 속도를 줄일 수 있었다.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207541-62921987-e0a4-4cd4-8a03-32c14c8d1585.png&quot; /&gt;&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="deeplearning, requests, http, web_server, 속도, 개선" /><summary type="html">다른 관점으로 보기</summary></entry><entry><title type="html">Test Results</title><link href="http://localhost:4000/test-results/" rel="alternate" type="text/html" title="Test Results" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/test-results</id><content type="html" xml:base="http://localhost:4000/test-results/">&lt;h1 id=&quot;requests-테스트&quot;&gt;requests 테스트&lt;/h1&gt;
+
+&lt;p&gt;테스트는 다음과 같은 조건으로 한다.  (MP==멀티 프로세스, MT==멀티 스레드)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;서버 구성 : single, MP, MT&lt;/li&gt;
+  &lt;li&gt;requests  방식 : single, MP, MT&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;서버 구성은 gunicorn 실행 시 option을 달리하며 구현할 수 있고, request 방식은 이전의 포스트(&lt;a href=&quot;https://www.notion.so/python-fba93794b4064ec3bfec8413d16ef297&quot;&gt;[python] 멀티 프로세스&lt;/a&gt;)에 정리한 것을 참조하여 구현할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;테스트 하기 전엔 응답 처리 시간만 고려 대상이었으나, 관찰 결과 GPU 메모리 사용량 또한 살펴봐야한다는 걸 깨달았다.&lt;/p&gt;
+
+&lt;p&gt;결과부터 말하자면,&lt;/p&gt;
+
+&lt;p&gt;서버 구성과 requests 방식 둘 다 MT로 했을 때, GPU 메모리 사용량을 크게 늘리지 않으면서도 처리 속도를 기존 대비 37% 이상 줄일 수 있었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%201.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;flask-단독&quot;&gt;flask 단독&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;GPU 메모리 사용량은 다음 명령어로 살펴볼 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;watch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nvidia&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;처리 속도&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;응답(처리 파일) 개수는 [1, 10, 50, 100, 1000]개로 증가시켜 보았고, 각각에 따른 멀티 프로세스의 개수는 [1, 2, 2, 5, 20]개로 구성해보았다.&lt;/p&gt;
+
+&lt;p&gt;멀티 프로세스 개수 선정의 기준은 없고, 테스트할 조건이 많아 임의적으로 구성하였다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/7c5420bfe0d34e5f81d40df24f78b79f&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%202.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;single flask 서버에도 requests를 멀티로 찌르면 응답을 멀티로 하는 것을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;조건이 각각 달라 MP, MT 중 어느 것이 더 낫다라고 현시점에서 단정할 수 없지만,&lt;/p&gt;
+
+&lt;p&gt;파일개수 100일 때, requests가 MP/MT 5 인 경우 single로 했을 때에 비해 처리 속도가 10초 이상 줄어들었음을 알 수 있다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GPU Memory 사용량 - (참조 : &lt;a href=&quot;https://brunch.co.kr/@leedongins/133&quot;&gt;MiB와 MB는 어떻게 다른가?&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;하지만 해당 방식은 requests 의 멀티 구성(multi number)을 늘리는 만큼 GPU 메모리 사용량이 대략 선형적으로 증가한다는 단점이 있다. (MP 2 일 때를 보면 file_len의 영향도 있는 것으로 보임)&lt;/p&gt;
+
+&lt;p&gt;또한 그렇게 늘어난, 해당 프로세스에 물려있는 GPU 메모리는 따로 초기화하는 과정이 없는 이상 계속 물려 있는 것으로 보인다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/ac732eb121ad419cb9f2b4a6f0516d15&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%203.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;처리 속도가 30% 이상 감소한다고 할지라도 GPU 메모리 사용량이 3배 정도 증가하면, 그리고 처리량에 따라 더 늘 수도 있음을 감안하면 flask 단독 서버에 멀티 프로세스 혹은 멀티 스레드로 request를 요청하는 방식은 고려 대상조차 아닌 것으로 보인다.&lt;/p&gt;
+
+&lt;h2 id=&quot;gunicorn--nginx&quot;&gt;gunicorn &amp;amp; nginx&lt;/h2&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;이 시점에서 헷갈리는 지점을 한 번 짚고 넘어가자면,&lt;/p&gt;
+
+&lt;p&gt;요청(requests)을 싱글, MP, MT로 보내는 것과 (이전의 [python] 멀티 프로세스 포스팅 참조)&lt;/p&gt;
+
+&lt;p&gt;웹 서버(flask, gunicorn, nginx) 환경을 싱글, 멀티 프로세스(workers), 멀티 스레드로 구성하는 것은 별개라는 것이다.&lt;/p&gt;
+
+&lt;p&gt;웹 서버 환경을 다르게 구성하는 것은 gunicorn 실행시 workers와 threads 옵션을 통해 간단히 수행할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gunicorn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;포트&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;wsgi:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;옵션&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;flask 단독으로 띄운 것과 비교하기 위해 우선은 workers=1 로 두고 테스트해본다.&lt;/p&gt;
+
+&lt;p&gt;이후 테스트에서 요청(파일) 개수는 100개로 통일한다.&lt;/p&gt;
+
+&lt;h3 id=&quot;gunicorn-worker-1&quot;&gt;gunicorn worker 1&lt;/h3&gt;
+
+&lt;p&gt;파일 개수 100개일 때, flask와 동일하게 request의 MP, MT는 5로 구성한 결과이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/e62a2c9d795f472eacd5062fc35acd36&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;처리 시간&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%204.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;gunicorn 에 직접 요청하는 것은 요청 방식이 어떻든 속도면에서 차이가 없다.&lt;/p&gt;
+
+&lt;p&gt;하지만 nginx의 경우 flask에 MP, MT로 요청할 때만큼은 아니지만 약 7초(23%) 정도의 속도 개선이 이뤄졌음을 볼 수 있다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GPU Memory 사용량&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%205.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;flask 단독 서버와는 달리 gunicorn, nginx 모두 requests 방식에 따른 GPU 메모리 사용량의 변화는 없다.&lt;/p&gt;
+
+&lt;p&gt;1, 2 둘 다 고려를 해보면, flask + gunicorn + nginx 구성이 타당해보인다.&lt;/p&gt;
+
+&lt;p&gt;하지만 개선의 여지는 없을까?&lt;/p&gt;
+
+&lt;h3 id=&quot;gunicorn-worker-2&quot;&gt;gunicorn worker 2&lt;/h3&gt;
+
+&lt;p&gt;gunicorn의 worker를 늘리는 것은 멀티 프로세스 개념과도 같이 서버를 worker 수만큼 더 띄우는 것과 다름없다.&lt;/p&gt;
+
+&lt;p&gt;nvidia-smi 로 확인을 할 수 있는데, 아예 웹 서버가 두 개가 띄워졌다. 여기서 바로 해당 방식의 문제점을 파악할 수 있는데, worker를 늘려서 속도를 개선시킬 수 있다하더라도, worker에 비례해 메모리 사용량이 늘어난다는 것이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%206.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;따라서 채택 불가한 옵션이지만, requests 조건에 따른 처리 시간을 보면 다음과 같다.&lt;/p&gt;
+
+&lt;p&gt;서버 구성은 gunicorn worker 2에 파일 개수는 100개이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/50b7cb25edea47f39e26db172caf5c1a&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;그래프에서 flask는 flask 단독 서버에 requests를 싱글로 요청했을 때의 값으로, 가장 기본형과의 비교를 위해 넣었다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%207.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;역시나 nginx 쪽의 속도가 가장 빠르다.&lt;/p&gt;
+
+&lt;h3 id=&quot;gunicorn-threads-2&quot;&gt;gunicorn threads 2&lt;/h3&gt;
+
+&lt;p&gt;어차피 메모리 문제 때문에 worker를 늘리는 방식은 기각이므로 worker를 더 늘려보지 않고, thread 옵션을 바꿔보기로 한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/abed88525fde4919af707d75037459c0&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;처리 시간&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%208.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;앞서 gunicorn 에 worker를 2로 늘린 것과 비교를 해보면, thread를 2로 세팅한 쪽이 훨씬 효율적인&lt;/p&gt;
+
+&lt;p&gt;것을 알 수 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;worker 2에서 가장 빨랐던 nginx만큼, thread 2 일 때의 gunicorn이 빨라졌다.&lt;/li&gt;
+  &lt;li&gt;thread 2 일 때의 nginx의 속도가 더 개선되었다.&lt;/li&gt;
+  &lt;li&gt;request MP를 늘리면 처리 속도가 빨라지다가 어느 지점에선 임계치에 도달한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GPU 메모리 사용량&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%209.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;기존 3137MiB에서 3793MiB로 늘어난 것을 볼 수 있다. (참고로 테스트 서버는 /opt/conda/bin/python 을 통해 실행하고 있다.)&lt;/p&gt;
+
+&lt;p&gt;하지만 worker도 하나만 띄웠고, 속도 개선을 위해선 충분히 지불할 수 있는 비용이라 여겨진다.&lt;/p&gt;
+
+&lt;h3 id=&quot;gunicorn-threads-4-6-8-10&quot;&gt;gunicorn threads 4, 6, 8, 10&lt;/h3&gt;
+
+&lt;p&gt;gunicorn과 nginx 를 비교하면 nginx 쪽이 지속적으로 더 낫다는 게 증명되었으니, 이제 gunicorn의 thread 수만 바꿔가며 nginx 테스트만 해보자.&lt;/p&gt;
+
+&lt;p&gt;테이블에서 column (ex. t2)는 gunicorn option이 threads 2 라는 의미이다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;처리 시간&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/3a2468d3f5f24c30904e7d92cfb67c31&quot;&gt;request 를 MP로&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/7762d596ef074809925ea751a078b825&quot;&gt;request를 MT로&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/%EB%B9%84%EA%B5%90.png&quot; alt=&quot;비교.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;파란색이 requests를 MP로, 주황색이 MT로 했을 때의 결과이다.&lt;/p&gt;
+
+&lt;p&gt;multi requests number가 5 이상일 땐, 파란색보다 주황색이 조금 더 빠른 경향을 띄고 있다.&lt;/p&gt;
+
+&lt;p&gt;즉, &lt;strong&gt;server도 스레드로 구성하고, requests도 스레드로 보내는 게 좋다&lt;/strong&gt;고 결론을 낼 수 있을 것 같다.&lt;/p&gt;
+
+&lt;p&gt;아무래도 requests 하나당 처리 시간이 있으니, (이론상) 동시에 여러 요청을 보내는 방식(MP)보다, 대기 타임에 다른 작업을 하는 멀티 스레드 방식이 해당 작업엔 더 맞지 않나 생각된다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%2010.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;전체를 비교해보면, server t6 &amp;amp; req MT10 이 가장 빠르고 그 뒤를 t6_mp10이 아니라 t4_mt10과 t4_mp10 이 따르고 있다. req_MP의 경우 server(gunicorn)의 threads 옵션을 늘린다고 무조건 속도가 빨라지지 않음을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%2011.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;그래프로만 판단했을 때, t6의 경우 mt를 좀 더 늘리면 속도 개선의 여지가 있어보이지만, GPU 메모리 사용량도 따져봐야할 시점이다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GPU 메모리 사용량&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/b3004ce20ff64f4cb88dee27d4cd474b&quot;&gt;GPU 메모리 사용량 - 처리 건수 3000&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled%201.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;GPU 메모리 사용량을 중점적으로 보기 위해 처리 건수를 100에서 3000으로 늘렸다.&lt;/p&gt;
+
+&lt;p&gt;request MT가 MP보다 처리 속도도 빨랐지만, GPU 메모리 사용량도 상대적으로 작다.&lt;/p&gt;
+
+&lt;h2 id=&quot;종합&quot;&gt;종합&lt;/h2&gt;
+
+&lt;p&gt;여태까지의 테스트 결과를 정리하자면&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;server 구성은 threads 2 이상&lt;/li&gt;
+  &lt;li&gt;request 는 멀티 스레드로 5 이상&lt;/li&gt;
+  &lt;li&gt;속도와 GPU 메모리 사용량의 trade off 를 고려해 선택할 것.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;정도가 되겠다.&lt;/p&gt;
+
+&lt;p&gt;최종적으로 처리 시간이 18초 대로 줄어든 조건들을 선별하면 다음과 같다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.notion.so/6cc8d51d32744c6897507455c06aefbd&quot;&gt;Untitled&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;requests%20%E1%84%90%E1%85%A6%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3%20e6a173b1c5bb46f7a6e45193fd055d5c/Untitled.png&quot; alt=&quot;Untitled&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+
+&lt;p&gt;서버 구성과 requests 방식을 multi threads로 변경시, 처리 속도가 기존에 비해 37~39% 가량 절감되었다. GPU 메모리 사용량과의 trade-off 를 감당할 수 있다면 40%까지도 줄일 수 있을 것으로 보이는데 그건 선택의 문제일 것 같다.&lt;/p&gt;
+
+&lt;p&gt;무엇보다 모델 개발자가&lt;del&gt;조직이&lt;/del&gt; 해당 구성의 필요성을 인지하는 게 가장 중요한 게 아닐까 싶다. 배포 이전에 테스트 시간도 줄일 수 있는데 마다할 이유가 있을까 싶지만, 변화를 싫어하는 게 또 사람인지라…&lt;/p&gt;</content><author><name>Your Name</name></author><summary type="html">requests 테스트</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성</title><link href="http://localhost:4000/datascience/web-server-env-setting/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/web-server-env-setting</id><content type="html" xml:base="http://localhost:4000/datascience/web-server-env-setting/">&lt;h1 id=&quot;환경-구성&quot;&gt;환경 구성&lt;/h1&gt;
+
+&lt;h3 id=&quot;docker-이미지&quot;&gt;docker 이미지&lt;/h3&gt;
+
+&lt;p&gt;도커 이미지는 flask와 gunicorn 이 같이 설치된 것과, nginx 가 설치된 것 두 개를 만들어 준다.&lt;/p&gt;
+
+&lt;p&gt;하나를 만들어서 컨테이너를 두 개 따로 띄워도 되는데, 개별로 만들면 docker-compose로 한 번에 올리기가 편하다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;flask &amp;amp; gunicorn 용&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;아래에도 설명하겠지만, 구동 측면에서 gunicorn은 flask를 대신 실행시켜주는 거라 생각하면 된다.&lt;/p&gt;
+
+&lt;p&gt;그래서 flask와 gunicorn은 같은 곳에 설치해야 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;```
+// Dockerfile 추가
+RUN pip install flask==1.1.2 flask_cors==3.0.9
+RUN pip install flask_restful_swagger_2==0.35
+RUN pip install gunicorn
+```
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;nginx 용&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;nginx.conf와 project.conf 파일은 nginx 용 Dockerfile 과 같은 경로에 생성해준다.&lt;/p&gt;
+
+&lt;p&gt;nginx 설정은 필요에 따라 변경 가능.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// Dockerfile - nginx
+FROM nginx:1.15.8
+
+RUN rm /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/
+RUN rm /etc/nginx/conf.d/default.conf
+COPY project.conf /etc/nginx/conf.d/
+
+RUN apt-get update
+RUN apt-get install -y net-tools
+RUN apt-get install vim
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// nginx.conf
+# Define the user that will own and run the Nginx server
+user  nginx;
+# Define the number of worker processes; recommended value is the number of
+# cores that are being used by your server
+worker_processes  1;
+# Define the location on the file system of the error log, plus the minimum
+# severity to log messages for
+error_log  /var/log/nginx/error.log warn;
+# Define the file that will store the process ID of the main NGINX process
+pid        /var/run/nginx.pid;
+
+# events block defines the parameters that affect connection processing.
+events {
+    # Define the maximum number of simultaneous connections that can be opened by a worker proce$
+    worker_connections  1024;
+}
+
+# http block defines the parameters for how NGINX should handle HTTP web traffic
+http {
+    # Include the file defining the list of file types that are supported by NGINX
+    include       /etc/nginx/mime.types;
+    # Define the default file type that is returned to the user
+    default_type  text/html;
+    # Define the format of log messages.
+    log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;
+                        &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;
+                        &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;
+                            # Define the location of the log of access attempts to NGINX
+    access_log  /var/log/nginx/access.log  main;
+    # Define the parameters to optimize the delivery of static content
+    sendfile        on;
+    tcp_nopush     on;
+    tcp_nodelay    on;
+    # Define the timeout value for keep-alive connections with the client
+    keepalive_timeout  65;
+    # Define the usage of the gzip compression algorithm to reduce the amount of data to transmit
+    #gzip  on;
+    # Include additional parameters for virtual host(s)/server(s)
+    include /etc/nginx/conf.d/*.conf;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// project.conf
+server {
+
+    listen 80;
+    server_name 서버 이름;
+    client_max_body_size 20M;   -- 디폴트가 10M가 어지간하면 늘려주는 게 좋다. 
+
+    location / {
+        proxy_pass http://&amp;lt;flask 서버 경로&amp;gt;:&amp;lt;포트&amp;gt;;  -- 소켓이 더 빠르다고.
+
+        # Do not change this
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /static {
+        rewrite ^/static(.*) /$1 break;
+        root /static;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;flask-서버&quot;&gt;flask 서버&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// flask.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route(&apos;/hello&apos;)
+def hello():
+    return &apos;Hellow World!&apos;
+
+if __name__ == &apos;__main__&apos;:
+    app.run(host=&apos;0.0.0.0&apos;, port=&apos;8080&apos;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위와 같은 flask 서버를 단일로 띄우려면 아래와 같이 실행하면 된다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python flask.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gunicorn&quot;&gt;gunicorn&lt;/h3&gt;
+
+&lt;p&gt;flask.py와 같은 경로에 wsgi.py을 다음과 같이 생성한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// wsgi.py 
+from flask import app
+
+if __name__ == &quot;__main__&quot;:
+    app.run()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이후 flask.py와 같은 경로에서 gunicorn을 다음과 같이 실행시킨다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gunicorn -b 0.0.0.0:&amp;lt;포트&amp;gt; wsgi:app &amp;lt;옵션&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;gunicorn 실행 옵션엔 —workers 5 —threads 10 같은 것을 넣을 수 있는데, 이후 옵션을 달리해 처리 속도 테스트를 할 예정이다.&lt;/p&gt;
+
+&lt;p&gt;소스를 보면 flask app을 gunicorn을 통해 실행시키 것과 다름없음을 알 수 있다.&lt;/p&gt;
+
+&lt;p&gt;참고로 -b는 bind인데 이 &lt;a href=&quot;https://wikidocs.net/76904&quot;&gt;페이지&lt;/a&gt;를 보면 소켓에 bind 하면 포트 통신보다 더 빠르고 효율적이라고 한다. 하지만 docker 컨테이너 환경에서 소켓을 연결하는 법을 몰라 여기서는 포트 연결로만 진행하겠다.&lt;/p&gt;
+
+&lt;h3 id=&quot;nginx&quot;&gt;nginx&lt;/h3&gt;
+
+&lt;p&gt;컨테이너를 띄우면서 실행해도 되지만, 여러 테스트를 해야해서 컨테이너 내부에서 nginx 서버를 띄우기로 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// nginx 구동
+service nginx start
+// 재구동 
+service nginx restart
+// 서버 확인
+netstat -ntlp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;다음 포스팅에선, 이렇게 띄운 flask&amp;amp;gunicorn + nginx 환경에서 싱글, 멀티 프로세스, 멀티 스레드 방식으로 request를 날려보며 처리 시간을 비교한 결과를 다루려고 한다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="deeplearning, requests, http, web_server, 속도, 개선" /><summary type="html">환경 구성</summary></entry><entry><title type="html">[python] 멀티 프로세스로 작업 속도 향상시키기</title><link href="http://localhost:4000/programming/multi-process-in-python/" rel="alternate" type="text/html" title="[python] 멀티 프로세스로 작업 속도 향상시키기" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/programming/multi-process-in-python</id><content type="html" xml:base="http://localhost:4000/programming/multi-process-in-python/">&lt;h1 id=&quot;병목-구간-찾기&quot;&gt;병목 구간 찾기&lt;/h1&gt;
+
+&lt;p&gt;입사 후 첫 프로젝트가 데이터 전처리였다. 주어진 당면 과제가 가능한 모든 파트에 멀티 프로세스를 적용하고 전처리 시간을 최대한 줄이라, 그래야 뒷작업까지 하루 안에 끝낼 수 있다.. 라는 것.&lt;/p&gt;
+
+&lt;p&gt;전처리에서 시간을 많이 잡아 먹는 부분을 찾아보니 주로 list나 dictionary에 담긴 자료들을 처리하는 작업이었는데 죄다 list에 담긴 자료를 처리하거나, 반복문인 구간이었다.&lt;/p&gt;
+
+&lt;p&gt;하다보니 앞서 언급한 거의 모든 병목 구간에서 멀티 프로세스로 구성하는 법을 터득하게 되었고, 싱글로 처리할 경우 하루가 훌쩍 넘어가도 끝내지 못하던 작업을(결국 끝을 못 봄), 멀티로 구성해 1시간 이내로 끝내기도 했었다.&lt;/p&gt;
+
+&lt;p&gt;멀티 프로세스를 소개하는 자료를 찾아보면 주로 아래의 기본형 구성만 소개하고 끝인데, 여기선 요소별/범위형 프로세싱에 더해 return 값을 받아서 처리하는 것까지 정리하려고 한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;기본형&quot;&gt;기본형&lt;/h1&gt;
+&lt;p&gt;Python 멀티프로세스엔 여러 라이브러리가 있지만, 대체로 추천하는 건 ProcessPoolExecutor 라 그걸 썼는데, 기본형은 아래와 같다.&lt;/p&gt;
+
+&lt;p&gt;참고로 ProcessPoolExecutor 대신 ThreadPoolExecutor 을 쓰면 멀티 스레드로 간단하게 변경할 수 있다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;concurrent.futures&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProcessPoolExecutor&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;multiprocessing&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;multiprocessing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cpu_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;   
+&lt;span class=&quot;c1&quot;&gt;# 아래와 같은 방식으로 cpu 사용률 조절 가능.
+# n_cpu = int(multiprocessing.cpu_count() * 0.7)  
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;function_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;var1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;var2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;function_multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;list_of_var1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;list_of_var2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProcessPoolExecutor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_workers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;function_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list_of_var1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list_of_var2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+	  &lt;span class=&quot;n&quot;&gt;function_multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;executor.map이 묶어주는 건, 멀티로 처리하려는 싱글 함수와 싱글 함수의 인자들이다.&lt;/p&gt;
+
+&lt;p&gt;list_of_var1, list_of_var2와 같이 executor.map의 인자에서, 함수가 아닌 부분은, length가 동일한 list로 구성해야 한다. 리스트의 같은 index 를 인자로 택해, 각각의 멀티가 돌아가는 식이기 때문이다.&lt;/p&gt;
+
+&lt;p&gt;예시의 경우 출력값은 아래와 같다.&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;list_of_var1[0] + list_of_var2[0] = 3
+list_of_var1[1] + list_of_var2[1] = 7
+list_of_var1[2] + list_of_var2[2] = 11
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;function_single 이 처리되는 속도에 따라 출력 순서가 달라질 수 있다는 점은 유념해야 한다. 즉, return 값을 받아올 때 리스트에 그냥 담으면 안 된다는 이야기.&lt;/p&gt;
+
+&lt;p&gt;리스트를 멀티로 처리하는 경우는 작업 방식에 따라 크게 두 가지로 나눌 수 있다. 그리고 그 두 가지 방식과 추가로 말하는 방식을 상황에 맞게 사용한다면, 리스트로 구성할 수 있는 건 웬만하면 멀티로 다 처리할 수 있으리라 생각한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;요소별-프로세싱&quot;&gt;요소별 프로세싱&lt;/h1&gt;
+
+&lt;p&gt;첫 번째는 리스트의 요소를 하나씩 처리하는 건데, 위의 기본형에서 든 예와 동일한 방식이다.&lt;/p&gt;
+
+&lt;p&gt;전처리에서는 이 방식을 주로 텍스트 파일을 읽어와 tfrecord라는 형식의 output을 만들 때 사용했는데, tfrecord 만드는 데 걸리는 시간도 오래 걸렸을 뿐더러, 처리할 파일의 개수도 아주 많아서 꼭 멀티로 구성해야하는 부분이었다.&lt;/p&gt;
+
+&lt;p&gt;예시는 txt 파일을 처리해 json으로 바꿔 저장하는 작업이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;input_file_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;file1.txt&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;file2.txt&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;file3.txt&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;output_file_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;file1.json&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;file2.json&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;file3.json&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;some_factor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 임의의 값
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;convert_txt_json_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;some_factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;r&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;~~~~&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;w&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;convert_txt_json_multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;n_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProcessPoolExecutor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_workers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;convert_txt_json_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+                     &lt;span class=&quot;n&quot;&gt;input_file_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                     &lt;span class=&quot;n&quot;&gt;output_file_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+					 &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;some_factor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_files&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;func_single에 쓰이는 some_factor의 경우 리스트가 아니여서 멀티프로세싱의 인풋엔 [some_factor] * n_files 로 변환해 넣어야 한다.&lt;/p&gt;
+
+&lt;h1 id=&quot;범위-프로세싱&quot;&gt;범위 프로세싱&lt;/h1&gt;
+
+&lt;p&gt;리스트의 개별 요소 처리엔 시간이 많이 걸리지 않는데, 리스트가 길어서 병목이 되는 경우도 많다. 그 경우 리스트를 일정한 간격으로 쪼개서 처리하면 되는데, 요소별 처리보다는 조금 까다롭다.&lt;/p&gt;
+
+&lt;p&gt;기본은 single로 돌리는 함수에 처리하려는 리스트의 인덱스를 인자로 넣어주는 것이다.&lt;/p&gt;
+
+&lt;p&gt;아래의 예는 dict의 key를 리스트로 만들어 dict 파일을 쪼갠 뒤, 멀티로 처리하는 방식.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;func_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token_sent&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;total_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;tokenized_sentence&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]:&lt;/span&gt;
+			&lt;span class=&quot;c1&quot;&gt;# 어쩌고 저쩌고
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;func_multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;global&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;total_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;total_json&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;some_function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;summary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;total_json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+	&lt;span class=&quot;c1&quot;&gt;# 범위 쪼개기
+&lt;/span&gt;	&lt;span class=&quot;n&quot;&gt;full_len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;process_index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;full_len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;process_index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;full_len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;full_len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+		&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProcessPoolExecutor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_workers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;func_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				             &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; 
+							 &lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:]&lt;/span&gt;
+				             &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;범위 쪼개는 부분은 코드만 보면 쉽게 이해할 수 있을 거라 설명은 생략한다.&lt;/p&gt;
+
+&lt;p&gt;여기서 핵심은 global 파트이다.&lt;/p&gt;
+
+&lt;p&gt;요소별 프로세싱보다 까다로운 이유는 범위를 쪼개는 데 있는 게 아니고, list를 인풋으로 받는 요소별 프로세싱과는 달리, func_single 내에 처리하려는 list가 들어있다는 점이다. 해당 리스트나 변수를 single의 인풋으로 받게 되면, executor.map의 인자가 아래와 같은 식이 되는데, 무척 비효율적이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;....,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;9999999999&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n_files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;func_single&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; 
+			&lt;span class=&quot;n&quot;&gt;rng_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:],&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccid_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_files&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;##
+&lt;/span&gt;			&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## [ [1, ...., 9999999999], [1, ...., 9999999999], ... , [1, ...., 9999999999] ]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이를 해결하기 위해 해당 리스트를 init으로 self.ccid_list로 만들어보기도 하고 별짓을 다 해봤는데, 케이스별로 될 때도 있고, 안 될 때도 있었다.&lt;/p&gt;
+
+&lt;p&gt;그 차이를 정확히 구별하지 못해 시행착오를 엄~~~~청나게 겪었는데 결국 single에 들어가는 리스트를 &lt;strong&gt;전역 변수로 선언&lt;/strong&gt;하면 매끈하게 작동하는 걸 알아냈다.&lt;/p&gt;
+
+&lt;h1 id=&quot;return-값-처리&quot;&gt;Return 값 처리&lt;/h1&gt;
+
+&lt;p&gt;위의 방식은 모두 return 값이 없다.&lt;/p&gt;
+
+&lt;p&gt;멀티프로세싱으로 리턴값을 받아 처리하려면 executor를 리스트로 묶어주면 된다.&lt;/p&gt;
+
+&lt;p&gt;주의할 점은 각각의 멀티프로세싱이 시작한 순서대로 완료가 되는 건 아닐 수 있기에, 리스트에 결과값을 담되 순서는 무시할 수 있는 요소로 만들어야 한다.&lt;/p&gt;
+
+&lt;p&gt;그래서 각 프로세싱의 결과를 dict 형태로 return 받고, 필요한 경우 리스트 안의 dict를 하나로 합치는 방식으로 사용했다.&lt;/p&gt;
+
+&lt;p&gt;아래의 예는 멀티로 여러 문서를 토크나이징해 각 토큰의 빈도수를 저장한 뒤 하나로 합치는 경우이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;count_vocab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;r&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;lines&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;readlines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;_tokenize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;split_tokens&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tokenizer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tokenize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;split_tokens&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;token&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;split_tokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;split_tokens&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;vocab_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lines&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; 					&lt;span class=&quot;n&quot;&gt;_tokenize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vocab_count&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;count_vocab_multi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input_file_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;counter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProcessPoolExecutor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_workers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_cpu&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;vocab_count_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;executor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count_vocab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 									&lt;span class=&quot;n&quot;&gt;input_file_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;# 결과를 하나의 counter에 담기 - dict와 비슷한 구조.
+&lt;/span&gt;	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vocab_count&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;vocab_count_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vocab_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;c1&quot;&gt;# dict로 변환
+&lt;/span&gt;	&lt;span class=&quot;n&quot;&gt;total_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;total_count&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;빈도수를 세고 병합해야 했기에 Counter를 썼는데 dict 구조나 마찬가지라고 생각해도 무방할 것이다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="programming" /><category term="python, 멀티프로세스, multi, 속도" /><summary type="html">병목 구간 찾기</summary></entry><entry><title type="html">One Hot Encoding</title><link href="http://localhost:4000/datascience/One-Hot-Encoding/" rel="alternate" type="text/html" title="One Hot Encoding" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T00:00:00+09:00</updated><id>http://localhost:4000/datascience/One-Hot-Encoding</id><content type="html" xml:base="http://localhost:4000/datascience/One-Hot-Encoding/">&lt;h1 id=&quot;multi-classification&quot;&gt;Multi Classification&lt;/h1&gt;
 &lt;h2 id=&quot;변이-유전자-탐색-및-분류&quot;&gt;변이 유전자 탐색 및 분류&lt;/h2&gt;
 
 &lt;p&gt;머신러닝과 딥러닝 이론을 어느정도 공부하고 진짜 문제와 이론을 접목시켜보기 위해 캐글 같은 프로젝트에 도전해보고 있다.&lt;/p&gt;
@@ -55,7 +643,7 @@
 
 &lt;h2 id=&quot;response-coding&quot;&gt;Response Coding&lt;/h2&gt;
 
-&lt;p&gt;One hot encoding의 단점은 category에 nunique가 많을 경우 생성되는 컬럼이 너무 많다는 것. 해당 프로젝트의 Metric이 각 클래스의 확률을 고려하는 Log Loss란 점을 고려해 Response Coding을 이용하는 게 좋아보이는데 Response Coding에 대해선 다음 글에 다루겠다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="classification" /><category term="Blog, classification, categorical, 범주형, NLP" /><summary type="html">Multi Classification 변이 유전자 탐색 및 분류</summary></entry><entry><title type="html">Response Coding</title><link href="http://localhost:4000/classification/responce-coding/" rel="alternate" type="text/html" title="Response Coding" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T00:00:00+09:00</updated><id>http://localhost:4000/classification/responce-coding</id><content type="html" xml:base="http://localhost:4000/classification/responce-coding/">&lt;h1 id=&quot;범주형-데이터&quot;&gt;범주형 데이터&lt;/h1&gt;
+&lt;p&gt;One hot encoding의 단점은 category에 nunique가 많을 경우 생성되는 컬럼이 너무 많다는 것. 해당 프로젝트의 Metric이 각 클래스의 확률을 고려하는 Log Loss란 점을 고려해 Response Coding을 이용하는 게 좋아보이는데 Response Coding에 대해선 다음 글에 다루겠다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="Blog, classification, categorical, 범주형, NLP" /><summary type="html">Multi Classification 변이 유전자 탐색 및 분류</summary></entry><entry><title type="html">Response Coding</title><link href="http://localhost:4000/datascience/responce-coding/" rel="alternate" type="text/html" title="Response Coding" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T00:00:00+09:00</updated><id>http://localhost:4000/datascience/responce-coding</id><content type="html" xml:base="http://localhost:4000/datascience/responce-coding/">&lt;h1 id=&quot;범주형-데이터&quot;&gt;범주형 데이터&lt;/h1&gt;
 &lt;h2 id=&quot;response-coding&quot;&gt;Response Coding&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://hslim8888.github.io/classification/One-Hot-Encoding/&quot;&gt;One-hot-encoding에 이어서&lt;/a&gt;&lt;/p&gt;
 
@@ -93,4 +681,4 @@ $p_i = (x_i+alpha)/(N+alpha*K)$ 로 바꿔준 건데, K는 class의 개수이다
 &lt;p&gt;원래라면 $P(F \vert 1)=0/100$ 이지만, 
 라플라스 평활을 이용하면 $P(F \vert 1)=(0+1)/(1000+3)$ 으로 값이 0이 아니게 된다.&lt;/p&gt;
 
-&lt;p&gt;따라서 머신러닝 문제에서 조건부 확률을 이용할 땐 무조건 Laplace Smoothing을 고려해야한다고 생각하면 될 듯.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="classification" /><category term="Blog" /><summary type="html">범주형 데이터 Response Coding One-hot-encoding에 이어서</summary></entry></feed>
+&lt;p&gt;따라서 머신러닝 문제에서 조건부 확률을 이용할 땐 무조건 Laplace Smoothing을 고려해야한다고 생각하면 될 듯.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="classification" /><summary type="html">범주형 데이터 Response Coding One-hot-encoding에 이어서</summary></entry></feed>
