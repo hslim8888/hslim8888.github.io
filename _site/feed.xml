@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-28T22:14:10+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/datascience/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/datascience/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2021-08-28T23:35:23+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Site Title</title><subtitle>An amazing website.</subtitle><author><name>Your Name</name></author><entry><title type="html">딥러닝 requests 속도 개선하기</title><link href="http://localhost:4000/data-science/increase-requests-speed-DL/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/increase-requests-speed-DL</id><content type="html" xml:base="http://localhost:4000/data-science/increase-requests-speed-DL/">&lt;h1 id=&quot;다른-관점으로-보기&quot;&gt;다른 관점으로 보기&lt;/h1&gt;
 
 &lt;p&gt;데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다.&lt;/p&gt;
 
@@ -25,7 +25,7 @@
 
 &lt;p&gt;100개의 requests 처리시 약 &lt;u&gt;29초에서 18초대로 기존 대비 37% 이상&lt;/u&gt; 처리 속도를 줄일 수 있었다.&lt;/p&gt;
 
-&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207541-62921987-e0a4-4cd4-8a03-32c14c8d1585.png&quot; /&gt;&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="deeplearning, requests, http, web_server, 속도, 개선" /><summary type="html">다른 관점으로 보기</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 2) 테스트 결과</title><link href="http://localhost:4000/datascience/test-results/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 2) 테스트 결과" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/test-results</id><content type="html" xml:base="http://localhost:4000/datascience/test-results/">&lt;h1 id=&quot;requests-테스트&quot;&gt;requests 테스트&lt;/h1&gt;
+&lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131207541-62921987-e0a4-4cd4-8a03-32c14c8d1585.png&quot; /&gt;&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">웹 서버 구성을 바꿔 딥러닝 처리 속도를 개선해보자.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 2) 테스트 결과</title><link href="http://localhost:4000/data-science/test-results/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 2) 테스트 결과" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/test-results</id><content type="html" xml:base="http://localhost:4000/data-science/test-results/">&lt;h1 id=&quot;requests-테스트-조건&quot;&gt;requests 테스트 조건&lt;/h1&gt;
 
 &lt;p&gt;테스트는 다음과 같은 조건으로 한다.  (MP==멀티 프로세스, MT==멀티 스레드)&lt;/p&gt;
 
@@ -39,7 +39,8 @@
 &lt;p&gt;테스트 하기 전엔 응답 처리 시간만 고려 대상이었으나, 관찰 결과 GPU 메모리 사용량 또한 살펴봐야한다는 걸 깨달았다.&lt;/p&gt;
 
 &lt;p&gt;결과부터 말하자면,&lt;br /&gt;
-서버 구성과 requests 방식 둘 다 MT로 했을 때, GPU 메모리 사용량을 크게 늘리지 않으면서도 처리 속도를 기존 대비 37% 이상 줄일 수 있었다.&lt;/p&gt;
+서버 구성과 requests 방식 둘 다 MT로 했을 때,&lt;br /&gt;
+GPU 메모리 사용량을 크게 늘리지 않으면서도 처리 속도를 기존 대비 37% 이상 줄일 수 있었다.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213801-c1f8f7f7-85d4-4b4a-b3ab-8cb6524aafca.png&quot; /&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213787-fa3d31d3-9034-45d7-871d-2859078e7d88.png&quot; /&gt;&lt;/p&gt;
@@ -53,9 +54,7 @@
 &lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;watch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nvidia&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smi&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;처리 시간&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;1-처리-시간&quot;&gt;1. 처리 시간&lt;/h4&gt;
 
 &lt;p&gt;응답(처리 파일) 개수는 [1, 10, 50, 100, 1000]개로 증가시켜 보았고, 각각에 따른 멀티 프로세스의 개수는 [1, 2, 2, 5, 20]개로 구성해보았다.&lt;/p&gt;
 
@@ -120,13 +119,10 @@
 
 &lt;p&gt;single flask 서버에도 requests를 멀티로 찌르면 응답을 멀티로 하는 것을 알 수 있다.&lt;/p&gt;
 
-&lt;p&gt;조건이 각각 달라 MP, MT 중 어느 것이 더 낫다라고 현시점에서 단정할 수 없지만,&lt;/p&gt;
+&lt;p&gt;조건이 각각 달라 MP, MT 중 어느 것이 더 낫다라고 현시점에서 단정할 수 없지만,&lt;br /&gt;
+파일개수 100일 때, requests가 MP/MT 5 인 경우 single로 했을 때에 비해 처리 속도가 10초 이상 줄어들었음을 알 수 있다.&lt;/p&gt;
 
-&lt;p&gt;파일개수 100일 때, requests가 MP/MT 5 인 경우 single로 했을 때에 비해 처리 속도가 10초 이상 줄어들었음을 알 수 있다.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;GPU Memory 사용량 - (참조 : &lt;a href=&quot;https://brunch.co.kr/@leedongins/133&quot;&gt;MiB와 MB는 어떻게 다른가?&lt;/a&gt;)&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;2-gpu-memory-사용량---참조--mib와-mb는-어떻게-다른가&quot;&gt;2. GPU Memory 사용량 - (참조 : &lt;a href=&quot;https://brunch.co.kr/@leedongins/133&quot;&gt;MiB와 MB는 어떻게 다른가?&lt;/a&gt;)&lt;/h4&gt;
 
 &lt;p&gt;하지만 해당 방식은 requests 의 멀티 구성(multi number)을 늘리는 만큼 GPU 메모리 사용량이 대략 선형적으로 증가한다는 단점이 있다. (MP 2 일 때를 보면 file_len의 영향도 있는 것으로 보임)&lt;/p&gt;
 
@@ -253,9 +249,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;처리 시간&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;1-처리-시간-1&quot;&gt;1. 처리 시간&lt;/h4&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213791-1d33dcc2-5c32-4870-92e1-f8813f82ae9f.png&quot; /&gt;&lt;/p&gt;
 
@@ -263,9 +257,7 @@
 
 &lt;p&gt;하지만 nginx의 경우 flask에 MP, MT로 요청할 때만큼은 아니지만 약 7초(23%) 정도의 속도 개선이 이뤄졌음을 볼 수 있다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;GPU Memory 사용량&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;2-gpu-memory-사용량&quot;&gt;2. GPU Memory 사용량&lt;/h4&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213792-85f89c7b-d2f4-44cf-9a0f-5fc0ba7dcb46.png&quot; /&gt;&lt;/p&gt;
 
@@ -275,19 +267,17 @@
 
 &lt;p&gt;하지만 개선의 여지는 없을까?&lt;/p&gt;
 
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-
 &lt;h3 id=&quot;gunicorn-worker-2&quot;&gt;gunicorn worker 2&lt;/h3&gt;
 
 &lt;p&gt;gunicorn의 worker를 늘리는 것은 멀티 프로세스 개념과도 같이 서버를 worker 수만큼 더 띄우는 것과 다름없다.&lt;/p&gt;
 
-&lt;p&gt;nvidia-smi 로 확인을 할 수 있는데, 아예 웹 서버가 두 개가 띄워졌다. 여기서 바로 해당 방식의 문제점을 파악할 수 있는데, worker를 늘려서 속도를 개선시킬 수 있다하더라도, worker에 비례해 메모리 사용량이 늘어난다는 것이다.&lt;/p&gt;
+&lt;p&gt;nvidia-smi 로 확인을 할 수 있는데, 아예 웹 서버가 두 개가 띄워졌다.&lt;br /&gt;
+여기서 바로 해당 방식의 문제점을 파악할 수 있는데, worker를 늘려서 속도를 개선시킬 수 있다하더라도, worker에 비례해 메모리 사용량이 늘어난다는 것이다.&lt;/p&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213793-c94e0771-b742-4039-ab3b-2eb0c860bcda.png&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;따라서 채택 불가한 옵션이지만, requests 조건에 따른 처리 시간을 보면 다음과 같다.&lt;/p&gt;
-
-&lt;p&gt;서버 구성은 gunicorn worker 2에 파일 개수는 100개이다.&lt;/p&gt;
+&lt;p&gt;따라서 채택 불가한 옵션이지만, requests 조건에 따른 처리 시간을 보면 다음과 같다. &lt;br /&gt;
+서버 구성은 gunicorn worker 2에 파일 개수는 100개이다.&lt;/p&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
@@ -326,8 +316,6 @@
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213794-f8718089-505c-4bd0-98fa-79e1d9ce9a8f.png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;역시나 nginx 쪽의 속도가 가장 빠르다.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;gunicorn-threads-2&quot;&gt;gunicorn threads 2&lt;/h3&gt;
 
@@ -375,9 +363,7 @@
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;처리 시간&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;1-처리-시간-2&quot;&gt;1. 처리 시간&lt;/h4&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213795-e5a519c3-fdca-4944-9181-a2abfa553f2a.png&quot; /&gt;&lt;/p&gt;
 
@@ -391,9 +377,7 @@
   &lt;li&gt;request MP를 늘리면 처리 속도가 빨라지다가 어느 지점에선 임계치에 도달한다.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;GPU 메모리 사용량&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;2-gpu-메모리-사용량&quot;&gt;2. GPU 메모리 사용량&lt;/h4&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213798-6ca31f0a-e058-4a8b-92b6-a852460dad08.png&quot; /&gt;&lt;/p&gt;
 
@@ -407,92 +391,89 @@
 
 &lt;p&gt;테이블에서 column (ex. t2)는 gunicorn option이 threads 2 라는 의미이다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;처리 시간&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;1-처리-시간-3&quot;&gt;1. 처리 시간&lt;/h4&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;request 를 MP로&lt;/p&gt;
-
-    &lt;table&gt;
-      &lt;thead&gt;
-        &lt;tr&gt;
-          &lt;th&gt;request MP&lt;/th&gt;
-          &lt;th&gt;t2&lt;/th&gt;
-          &lt;th&gt;t4&lt;/th&gt;
-          &lt;th&gt;t6&lt;/th&gt;
-        &lt;/tr&gt;
-      &lt;/thead&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;1&lt;/td&gt;
-          &lt;td&gt;29.4465&lt;/td&gt;
-          &lt;td&gt;29.3292&lt;/td&gt;
-          &lt;td&gt;30.1410&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;2&lt;/td&gt;
-          &lt;td&gt;21.7639&lt;/td&gt;
-          &lt;td&gt;21.4872&lt;/td&gt;
-          &lt;td&gt;22.0807&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;5&lt;/td&gt;
-          &lt;td&gt;19.3698&lt;/td&gt;
-          &lt;td&gt;19.0741&lt;/td&gt;
-          &lt;td&gt;19.7106&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;10&lt;/td&gt;
-          &lt;td&gt;19.3945&lt;/td&gt;
-          &lt;td&gt;18.5791&lt;/td&gt;
-          &lt;td&gt;18.6749&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;request를 MT로&lt;/p&gt;
-
-    &lt;table&gt;
-      &lt;thead&gt;
-        &lt;tr&gt;
-          &lt;th&gt;request MT&lt;/th&gt;
-          &lt;th&gt;t2&lt;/th&gt;
-          &lt;th&gt;t4&lt;/th&gt;
-          &lt;th&gt;t6&lt;/th&gt;
-        &lt;/tr&gt;
-      &lt;/thead&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;1&lt;/td&gt;
-          &lt;td&gt;31.1286&lt;/td&gt;
-          &lt;td&gt;29.6854&lt;/td&gt;
-          &lt;td&gt;29.8881&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;2&lt;/td&gt;
-          &lt;td&gt;22.6746&lt;/td&gt;
-          &lt;td&gt;21.6944&lt;/td&gt;
-          &lt;td&gt;21.7618&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;5&lt;/td&gt;
-          &lt;td&gt;19.2557&lt;/td&gt;
-          &lt;td&gt;18.7895&lt;/td&gt;
-          &lt;td&gt;19.8223&lt;/td&gt;
-        &lt;/tr&gt;
-        &lt;tr&gt;
-          &lt;td&gt;10&lt;/td&gt;
-          &lt;td&gt;19.1327&lt;/td&gt;
-          &lt;td&gt;18.5023&lt;/td&gt;
-          &lt;td&gt;18.0640&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
-  &lt;/li&gt;
+  &lt;li&gt;request 를 MP로&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;request MP&lt;/th&gt;
+      &lt;th&gt;t2&lt;/th&gt;
+      &lt;th&gt;t4&lt;/th&gt;
+      &lt;th&gt;t6&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;29.4465&lt;/td&gt;
+      &lt;td&gt;29.3292&lt;/td&gt;
+      &lt;td&gt;30.1410&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;21.7639&lt;/td&gt;
+      &lt;td&gt;21.4872&lt;/td&gt;
+      &lt;td&gt;22.0807&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;19.3698&lt;/td&gt;
+      &lt;td&gt;19.0741&lt;/td&gt;
+      &lt;td&gt;19.7106&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;19.3945&lt;/td&gt;
+      &lt;td&gt;18.5791&lt;/td&gt;
+      &lt;td&gt;18.6749&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;request를 MT로&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;request MT&lt;/th&gt;
+      &lt;th&gt;t2&lt;/th&gt;
+      &lt;th&gt;t4&lt;/th&gt;
+      &lt;th&gt;t6&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;31.1286&lt;/td&gt;
+      &lt;td&gt;29.6854&lt;/td&gt;
+      &lt;td&gt;29.8881&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;22.6746&lt;/td&gt;
+      &lt;td&gt;21.6944&lt;/td&gt;
+      &lt;td&gt;21.7618&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;19.2557&lt;/td&gt;
+      &lt;td&gt;18.7895&lt;/td&gt;
+      &lt;td&gt;19.8223&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;19.1327&lt;/td&gt;
+      &lt;td&gt;18.5023&lt;/td&gt;
+      &lt;td&gt;18.0640&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213782-69189b3a-ecd6-4702-983a-33400af572f4.png&quot; /&gt;&lt;/p&gt;
 
@@ -512,17 +493,43 @@
 
 &lt;p&gt;그래프로만 판단했을 때, t6의 경우 mt를 좀 더 늘리면 속도 개선의 여지가 있어보이지만, GPU 메모리 사용량도 따져봐야할 시점이다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;GPU 메모리 사용량&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h4 id=&quot;2-gpu-메모리-사용량-1&quot;&gt;2. GPU 메모리 사용량&lt;/h4&gt;
 
-&lt;p&gt;[GPU 메모리 사용량 - 처리 건수 3000]
-|server threads	|req_mp	|req_mt|
-|—|—|—|
-|t1	|3137	|3137|
-|t2	|3981	|3981|
-|t4	|4669	|4481|
-|t6	|5080	|4824|&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;GPU 메모리 사용량 - 처리 건수 3000&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;server threads&lt;/th&gt;
+      &lt;th&gt;req_mp&lt;/th&gt;
+      &lt;th&gt;req_mt&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;t1&lt;/td&gt;
+      &lt;td&gt;3137&lt;/td&gt;
+      &lt;td&gt;3137&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;t2&lt;/td&gt;
+      &lt;td&gt;3981&lt;/td&gt;
+      &lt;td&gt;3981&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;t4&lt;/td&gt;
+      &lt;td&gt;4669&lt;/td&gt;
+      &lt;td&gt;4481&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;t6&lt;/td&gt;
+      &lt;td&gt;5080&lt;/td&gt;
+      &lt;td&gt;4824&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213787-fa3d31d3-9034-45d7-871d-2859078e7d88.png&quot; /&gt;&lt;/p&gt;
 
@@ -530,9 +537,9 @@
 
 &lt;p&gt;request MT가 MP보다 처리 속도도 빨랐지만, GPU 메모리 사용량도 상대적으로 작다.&lt;/p&gt;
 
-&lt;h2 id=&quot;종합&quot;&gt;종합&lt;/h2&gt;
+&lt;h1 id=&quot;종합&quot;&gt;종합&lt;/h1&gt;
 
-&lt;p&gt;여태까지의 테스트 결과를 정리하자면&lt;/p&gt;
+&lt;p&gt;여태까지의 결과를 정리하면&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;server 구성은 threads 2 이상&lt;/li&gt;
@@ -540,7 +547,7 @@
   &lt;li&gt;속도와 GPU 메모리 사용량의 trade off 를 고려해 선택할 것.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;정도가 되겠다.&lt;/p&gt;
+&lt;p&gt;정도의 결론을 얻을 수 있다.&lt;/p&gt;
 
 &lt;p&gt;최종적으로 처리 시간이 18초 대로 줄어든 조건들을 선별하면 다음과 같다.&lt;/p&gt;
 
@@ -588,21 +595,19 @@
 
 &lt;p align=&quot;center&quot;&gt;&lt;img src=&quot;https://user-images.githubusercontent.com/61413986/131213801-c1f8f7f7-85d4-4b4a-b3ab-8cb6524aafca.png&quot; /&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;결론&quot;&gt;결론&lt;/h2&gt;
+&lt;h1 id=&quot;결론&quot;&gt;결론&lt;/h1&gt;
 
 &lt;p&gt;서버 구성과 requests 방식을 multi threads로 변경시, 처리 속도가 기존에 비해 37~39% 가량 절감되었다. GPU 메모리 사용량과의 trade-off 를 감당할 수 있다면 40%까지도 줄일 수 있을 것으로 보이는데 그건 선택의 문제일 것 같다.&lt;/p&gt;
 
-&lt;p&gt;무엇보다 모델 개발자가&lt;del&gt;조직이&lt;/del&gt; 해당 구성의 필요성을 인지하는 게 가장 중요한 게 아닐까 싶다. 배포 이전에 테스트 시간도 줄일 수 있는데 마다할 이유가 있을까 싶지만, 변화를 싫어하는 게 또 사람인지라…&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="deeplearning, requests, http, web_server, 속도, 개선" /><summary type="html">requests 테스트</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성</title><link href="http://localhost:4000/datascience/web-server-env-setting/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/datascience/web-server-env-setting</id><content type="html" xml:base="http://localhost:4000/datascience/web-server-env-setting/">&lt;h1 id=&quot;환경-구성&quot;&gt;환경 구성&lt;/h1&gt;
+&lt;p&gt;무엇보다 모델 개발자가&lt;del&gt;조직이&lt;/del&gt; 해당 구성의 필요성을 인지하는 게 가장 중요한 게 아닐까 싶다. 배포 이전에 테스트 시간도 줄일 수 있는데 마다할 이유가 있을까 싶지만, 변화를 싫어하는 게 또 사람인지라…&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><summary type="html">다양한 환경에서 딥러닝 모델 처리 속도를 테스트 해본다.</summary></entry><entry><title type="html">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성</title><link href="http://localhost:4000/data-science/web-server-env-setting/" rel="alternate" type="text/html" title="딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" /><published>2021-08-28T00:00:00+09:00</published><updated>2021-08-28T00:00:00+09:00</updated><id>http://localhost:4000/data-science/web-server-env-setting</id><content type="html" xml:base="http://localhost:4000/data-science/web-server-env-setting/">&lt;p&gt;본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다.&lt;/p&gt;
 
-&lt;h3 id=&quot;docker-이미지&quot;&gt;docker 이미지&lt;/h3&gt;
+&lt;h2 id=&quot;docker-이미지&quot;&gt;docker 이미지&lt;/h2&gt;
 
 &lt;p&gt;도커 이미지는 flask와 gunicorn 이 같이 설치된 것과, nginx 가 설치된 것 두 개를 만들어 준다.&lt;/p&gt;
 
 &lt;p&gt;하나를 만들어서 컨테이너를 두 개 따로 띄워도 되는데, 개별로 만들면 docker-compose로 한 번에 올리기가 편하다.&lt;/p&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;flask &amp;amp; gunicorn 용&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&quot;1-flask--gunicorn-용&quot;&gt;1. flask &amp;amp; gunicorn 용&lt;/h3&gt;
 
 &lt;p&gt;아래에도 설명하겠지만, 구동 측면에서 gunicorn은 flask를 대신 실행시켜주는 거라 생각하면 된다.&lt;/p&gt;
 
@@ -616,9 +621,7 @@ RUN pip install gunicorn
 ```
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;nginx 용&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&quot;2-nginx-용&quot;&gt;2. nginx 용&lt;/h3&gt;
 
 &lt;p&gt;nginx.conf와 project.conf 파일은 nginx 용 Dockerfile 과 같은 경로에 생성해준다.&lt;/p&gt;
 
@@ -703,7 +706,7 @@ server {
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;flask-서버&quot;&gt;flask 서버&lt;/h3&gt;
+&lt;h2 id=&quot;flask-서버&quot;&gt;flask 서버&lt;/h2&gt;
 
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// flask.py
 from flask import Flask
@@ -723,7 +726,7 @@ if __name__ == &apos;__main__&apos;:
 &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;python flask.py
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;gunicorn&quot;&gt;gunicorn&lt;/h3&gt;
+&lt;h2 id=&quot;gunicorn&quot;&gt;gunicorn&lt;/h2&gt;
 
 &lt;p&gt;flask.py와 같은 경로에 wsgi.py을 다음과 같이 생성한다.&lt;/p&gt;
 
@@ -745,7 +748,7 @@ if __name__ == &quot;__main__&quot;:
 
 &lt;p&gt;참고로 -b는 bind인데 이 &lt;a href=&quot;https://wikidocs.net/76904&quot;&gt;페이지&lt;/a&gt;를 보면 소켓에 bind 하면 포트 통신보다 더 빠르고 효율적이라고 한다. 하지만 docker 컨테이너 환경에서 소켓을 연결하는 법을 몰라 여기서는 포트 연결로만 진행하겠다.&lt;/p&gt;
 
-&lt;h3 id=&quot;nginx&quot;&gt;nginx&lt;/h3&gt;
+&lt;h2 id=&quot;nginx&quot;&gt;nginx&lt;/h2&gt;
 
 &lt;p&gt;컨테이너를 띄우면서 실행해도 되지만, 여러 테스트를 해야해서 컨테이너 내부에서 nginx 서버를 띄우기로 한다.&lt;/p&gt;
 
@@ -757,7 +760,7 @@ service nginx restart
 netstat -ntlp
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;다음 포스팅에선, 이렇게 띄운 flask&amp;amp;gunicorn + nginx 환경에서 싱글, 멀티 프로세스, 멀티 스레드 방식으로 request를 날려보며 처리 시간을 비교한 결과를 다루려고 한다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="datascience" /><category term="deeplearning, requests, http, web_server, 속도, 개선" /><summary type="html">환경 구성</summary></entry><entry><title type="html">[python] 멀티 프로세스로 작업 속도 향상시키기</title><link href="http://localhost:4000/programming/multi-process-in-python/" rel="alternate" type="text/html" title="[python] 멀티 프로세스로 작업 속도 향상시키기" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/programming/multi-process-in-python</id><content type="html" xml:base="http://localhost:4000/programming/multi-process-in-python/">&lt;h1 id=&quot;병목-구간-찾기&quot;&gt;병목 구간 찾기&lt;/h1&gt;
+&lt;p&gt;다음 포스팅에선, 이렇게 띄운 flask&amp;amp;gunicorn + nginx 환경에서 싱글, 멀티 프로세스, 멀티 스레드 방식으로 request를 날려보며 처리 시간을 비교한 결과를 다루려고 한다.&lt;/p&gt;</content><author><name>Your Name</name></author><category term="data-science" /><category term="deeplearning" /><category term="requests" /><category term="http" /><category term="web_server" /><category term="속도" /><category term="개선" /><category term="docker" /><category term="개발환경" /><summary type="html">도커로 flask, gunicorn, nginx 서버 띄우기</summary></entry><entry><title type="html">[python] 멀티 프로세스로 작업 속도 향상시키기</title><link href="http://localhost:4000/programming/multi-process-in-python/" rel="alternate" type="text/html" title="[python] 멀티 프로세스로 작업 속도 향상시키기" /><published>2021-08-27T00:00:00+09:00</published><updated>2021-08-27T00:00:00+09:00</updated><id>http://localhost:4000/programming/multi-process-in-python</id><content type="html" xml:base="http://localhost:4000/programming/multi-process-in-python/">&lt;h1 id=&quot;병목-구간-찾기&quot;&gt;병목 구간 찾기&lt;/h1&gt;
 
 &lt;p&gt;입사 후 첫 프로젝트가 데이터 전처리였다. 주어진 당면 과제가 가능한 모든 파트에 멀티 프로세스를 적용하고 전처리 시간을 최대한 줄이라, 그래야 뒷작업까지 하루 안에 끝낼 수 있다.. 라는 것.&lt;/p&gt;
 

@@ -1,23 +1,26 @@
 ---
 layout: posts
-title: "딥러닝 requests 속도 개선하기 - 1) web server 환경 구성" 
+title: "딥러닝 requests 속도 개선하기 - 1) web server 환경 구성"
+excerpt: "도커로 flask, gunicorn, nginx 서버 띄우기"
+
 categories:
-  - datascience
+  - data-science
 tags:
-  - deeplearning, requests, http, web_server, 속도, 개선
+  - [deeplearning, requests, http, web_server, 속도, 개선, docker, 개발환경]
+toc: true
+toc_sticky: true
 use_math: true
 comments: true
 ---
+본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다.
 
-# 환경 구성
-
-### docker 이미지
+## docker 이미지
 
 도커 이미지는 flask와 gunicorn 이 같이 설치된 것과, nginx 가 설치된 것 두 개를 만들어 준다. 
 
 하나를 만들어서 컨테이너를 두 개 따로 띄워도 되는데, 개별로 만들면 docker-compose로 한 번에 올리기가 편하다. 
 
-1. flask & gunicorn 용 
+### 1. flask & gunicorn 용 
 
 아래에도 설명하겠지만, 구동 측면에서 gunicorn은 flask를 대신 실행시켜주는 거라 생각하면 된다.
 
@@ -30,7 +33,7 @@ comments: true
     RUN pip install gunicorn
     ```
 
-2. nginx 용
+### 2. nginx 용
 
 nginx.conf와 project.conf 파일은 nginx 용 Dockerfile 과 같은 경로에 생성해준다. 
 
@@ -118,7 +121,7 @@ server {
 }
 ```
 
-### flask 서버
+## flask 서버
 
 ```
 // flask.py
@@ -140,7 +143,7 @@ if __name__ == '__main__':
 python flask.py
 ```
 
-### gunicorn
+## gunicorn
 
 flask.py와 같은 경로에 wsgi.py을 다음과 같이 생성한다.
 
@@ -164,7 +167,7 @@ gunicorn 실행 옵션엔 —workers 5 —threads 10 같은 것을 넣을 수 �
 
 참고로 -b는 bind인데 이 [페이지](https://wikidocs.net/76904)를 보면 소켓에 bind 하면 포트 통신보다 더 빠르고 효율적이라고 한다. 하지만 docker 컨테이너 환경에서 소켓을 연결하는 법을 몰라 여기서는 포트 연결로만 진행하겠다.
 
-### nginx
+## nginx
 
 컨테이너를 띄우면서 실행해도 되지만, 여러 테스트를 해야해서 컨테이너 내부에서 nginx 서버를 띄우기로 한다. 
 
