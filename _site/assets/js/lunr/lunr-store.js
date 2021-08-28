@@ -23,10 +23,10 @@ var store = [{
         "url": "/datascience/increase-requests-speed-DL/",
         "teaser": null
       },{
-        "title": "Test Results",
-        "excerpt":"requests 테스트 테스트는 다음과 같은 조건으로 한다. (MP==멀티 프로세스, MT==멀티 스레드) 서버 구성 : single, MP, MT requests 방식 : single, MP, MT 서버 구성은 gunicorn 실행 시 option을 달리하며 구현할 수 있고, request 방식은 이전의 포스트([python] 멀티 프로세스)에 정리한 것을 참조하여 구현할 수 있다. 테스트 하기 전엔 응답 처리...","categories": [],
-        "tags": [],
-        "url": "/test-results/",
+        "title": "딥러닝 requests 속도 개선하기 - 2) 테스트 결과",
+        "excerpt":"requests 테스트 테스트는 다음과 같은 조건으로 한다. (MP==멀티 프로세스, MT==멀티 스레드) 서버 구성 : single, MP, MT requests 방식 : single, MP, MT 서버 구성은 gunicorn 실행 시 option을 달리하며 구현할 수 있고, request 방식은 이전의 포스트([python] 멀티 프로세스)에 정리한 것을 참조하여 구현할 수 있다. 테스트 하기 전엔 응답 처리...","categories": ["datascience"],
+        "tags": ["deeplearning, requests, http, web_server, 속도, 개선"],
+        "url": "/datascience/test-results/",
         "teaser": null
       },{
         "title": "딥러닝 requests 속도 개선하기 - 1) web server 환경 구성",
