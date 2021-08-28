@@ -3,7 +3,7 @@ layout: posts
 title: "딥러닝 requests 속도 개선하기 - 2) 테스트 결과" 
 excerpt: "다양한 환경에서 딥러닝 모델 처리 속도를 테스트 해본다."
 categories:
-  - data-science
+  - datascience
 tags:
   - deeplearning
   - requests 

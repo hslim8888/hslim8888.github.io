@@ -3,7 +3,7 @@ layout: posts
 title: "딥러닝 requests 속도 개선하기" 
 excerpt: "웹 서버 구성을 바꿔 딥러닝 처리 속도를 개선해보자."
 categories:
-  - data-science
+  - datascience
 tags:
   - [deeplearning, requests, http, web_server, 속도, 개선]
 use_math: true

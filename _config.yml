@@ -115,7 +115,7 @@ author:
       # url: "https://your-website.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/sandul88"
+      # url: "https://twitter.com/sandul88"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
@@ -284,10 +284,11 @@ defaults:
       layout: single
       author_profile: true
       read_time: true
-      use_math: true
-      comments: # true
+      mathjax: true
+      comments: true
       share: true
       related: true
+      sidebar_main: true
 
   # _pages
   - scope:

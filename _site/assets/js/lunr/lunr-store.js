@@ -18,20 +18,20 @@ var store = [{
         "teaser": null
       },{
         "title": "딥러닝 requests 속도 개선하기",
-        "excerpt":"다른 관점으로 보기 데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다. 스스로 생각하기에 꽤나 특이한 경로를 거치는 중인데 덕분에 데이터 엔지니어링 뿐 아니라 그 전엔 전혀 알지 못했던 웹 개발까지 얕게나마 두루두루 살펴 볼 수 있는 기회를 갖게...","categories": ["data-science"],
+        "excerpt":"다른 관점으로 보기 데이터 분석 및 모델링 공부를 하다가 관련 직무에 지원했지만, 입사 후엔 어플리케이션 개발 팀에 배속되었고 거기서 맡은 업무는 데이터 전처리였다. 스스로 생각하기에 꽤나 특이한 경로를 거치는 중인데 덕분에 데이터 엔지니어링 뿐 아니라 그 전엔 전혀 알지 못했던 웹 개발까지 얕게나마 두루두루 살펴 볼 수 있는 기회를 갖게...","categories": ["datascience"],
         "tags": ["deeplearning","requests","http","web_server","속도","개선"],
-        "url": "/data-science/increase-requests-speed-DL/",
+        "url": "/datascience/increase-requests-speed-DL/",
         "teaser": null
       },{
         "title": "딥러닝 requests 속도 개선하기 - 1) web server 환경 구성",
-        "excerpt":"본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다. docker 이미지 도커 이미지는 flask와 gunicorn 이 같이 설치된 것과, nginx 가 설치된 것 두 개를 만들어 준다. 하나를 만들어서 컨테이너를 두 개 따로 띄워도 되는데, 개별로 만들면 docker-compose로 한 번에 올리기가 편하다. 1. flask &amp; gunicorn...","categories": ["data-science"],
+        "excerpt":"본 포스팅에선 도커를 이용하여 웹 서버를 flask, gunicorn, nginx 조합으로 구성하는 방법을 정리한다. docker 이미지 도커 이미지는 flask와 gunicorn 이 같이 설치된 것과, nginx 가 설치된 것 두 개를 만들어 준다. 하나를 만들어서 컨테이너를 두 개 따로 띄워도 되는데, 개별로 만들면 docker-compose로 한 번에 올리기가 편하다. 1. flask &amp; gunicorn...","categories": ["datascience"],
         "tags": ["deeplearning","requests","http","web_server","속도","개선","docker","개발환경"],
-        "url": "/data-science/web-server-env-setting/",
+        "url": "/datascience/web-server-env-setting/",
         "teaser": null
       },{
         "title": "딥러닝 requests 속도 개선하기 - 2) 테스트 결과",
-        "excerpt":"requests 테스트 조건 테스트는 다음과 같은 조건으로 한다. (MP==멀티 프로세스, MT==멀티 스레드) 서버 구성 : single, MP, MT requests 방식 : single, MP, MT 서버 구성은 gunicorn 실행 시 option을 달리하며 구현할 수 있고, request 방식은 이전의 포스트([python] 멀티 프로세스)에 정리한 것을 참조하여 구현할 수 있다. 테스트 하기 전엔 응답...","categories": ["data-science"],
+        "excerpt":"requests 테스트 조건 테스트는 다음과 같은 조건으로 한다. (MP==멀티 프로세스, MT==멀티 스레드) 서버 구성 : single, MP, MT requests 방식 : single, MP, MT 서버 구성은 gunicorn 실행 시 option을 달리하며 구현할 수 있고, request 방식은 이전의 포스트([python] 멀티 프로세스)에 정리한 것을 참조하여 구현할 수 있다. 테스트 하기 전엔 응답...","categories": ["datascience"],
         "tags": ["deeplearning","requests","http","web_server","속도","개선"],
-        "url": "/data-science/test-results/",
+        "url": "/datascience/test-results/",
         "teaser": null
       }]

@@ -247,6 +247,42 @@
   </div>
 </div>
   
+
+  
+    <!--전체 글 수를 세기 위한 연산. sum 변수에 전체 글 수 저장-->
+
+
+
+<nav class="nav__list">
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items" id="category_tag_menu">
+      <!--전체 글 수-->
+      <li>
+            📂 <span style="font-family:'Cafe24Oneprettynight';">전체 글 수</style> <span style="font-family:'Coming Soon';">6</style> <span style="font-family:'Cafe24Oneprettynight';">개</style> 
+      </li>
+      <li>
+        <!--span 태그로 카테고리들을 크게 분류 ex) C/C++/C#-->
+        <span class="nav__sub-title">데이터 과학</span>
+            <!--ul 태그로 같은 카테고리들 모아둔 페이지들 나열-->
+            <ul>
+                <!--Cpp 카테고리 글들을 모아둔 페이지인 /categories/cpp 주소의 글로 링크 연결-->
+                <!--category[1].size 로 해당 카테고리를 가진 글의 개수 표시--> 
+                
+                    
+                        <li><a href="/categories/datascience" class="">데이터 사이언스 (5)</a></li>
+                    
+                
+                    
+                
+            </ul>
+            
+      </li>
+  </ul>
+</nav>
+
+  
+
   </div>
 
 
@@ -273,7 +309,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/data-science/test-results/" rel="permalink">딥러닝 requests 속도 개선하기 - 2) 테스트 결과
+        <a href="/datascience/test-results/" rel="permalink">딥러닝 requests 속도 개선하기 - 2) 테스트 결과
 </a>
       
     </h2>
@@ -313,7 +349,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/data-science/web-server-env-setting/" rel="permalink">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성
+        <a href="/datascience/web-server-env-setting/" rel="permalink">딥러닝 requests 속도 개선하기 - 1) web server 환경 구성
 </a>
       
     </h2>
@@ -353,7 +389,7 @@
     
     <h2 class="archive__item-title no_toc" itemprop="headline">
       
-        <a href="/data-science/increase-requests-speed-DL/" rel="permalink">딥러닝 requests 속도 개선하기
+        <a href="/datascience/increase-requests-speed-DL/" rel="permalink">딥러닝 requests 속도 개선하기
 </a>
       
     </h2>
@@ -555,6 +591,8 @@ One-hot-encoding에 이어서
 
     
   <script src="/assets/js/main.min.js"></script>
+
+
 
 
 

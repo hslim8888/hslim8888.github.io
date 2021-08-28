@@ -4,7 +4,7 @@ title: "딥러닝 requests 속도 개선하기 - 1) web server 환경 구성"
 excerpt: "도커로 flask, gunicorn, nginx 서버 띄우기"
 
 categories:
-  - data-science
+  - datascience
 tags:
   - [deeplearning, requests, http, web_server, 속도, 개선, docker, 개발환경]
 toc: true
