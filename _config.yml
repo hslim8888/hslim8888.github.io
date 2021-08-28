@@ -16,10 +16,10 @@ minimal_mistakes_skin    : "mint" # "air", "aqua", "contrast", "dark", "dirt", "
 
 # Site Settings
 locale                   : "ko-KR"
-title                    : 왜 안 되지?
+title                    : "얇고 넓게 꾸준히"
 title_separator          : "-"
 subtitle                 : # site tagline that appears below site title in masthead
-name                     : "hslim"
+name                     : "Hyunsoo"
 description              : "꽤 발랄한 개발"
 url                      : "https://hslim8888.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
@@ -103,7 +103,7 @@ analytics:
 author:
   name             : "Hyunsoo"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "잡식"
+  bio              : "잡식형 괴발자"
   location         : "somewhere"
   email            : hslim8888@gmail.com
   links:
@@ -115,7 +115,7 @@ author:
       # url: "https://your-website.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      # url: "https://twitter.com/"
+      url: "https://twitter.com/sandul88"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
@@ -214,7 +214,7 @@ sass:
 
 
 # Outputting
-permalink: date #/:categories/:title/
+permalink: /:categories/:title/
 paginate: 10 # amount of posts to show
 paginate_path: /page:num/
 timezone: Asia/Seoul # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
