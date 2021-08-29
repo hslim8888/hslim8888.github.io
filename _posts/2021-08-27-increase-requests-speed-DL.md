@@ -1,6 +1,6 @@
 ---
 layout: posts
-title: "딥러닝 requests 속도 개선하기" 
+title: "딥러닝 requests 속도 개선하기 - 0) 들어가며" 
 excerpt: "웹 서버 구성을 바꿔 딥러닝 처리 속도를 개선해보자."
 categories:
   - datascience
